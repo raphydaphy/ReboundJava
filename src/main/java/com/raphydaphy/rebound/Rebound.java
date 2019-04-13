@@ -36,12 +36,12 @@ public class Rebound {
         GL.createCapabilities();
         GL30.glClearColor(1, 0, 0, 0);
 
-        ShaderProgram program = new ShaderProgram("src/main/resources/shaders", "basic");
+        var program = new ShaderProgram("src/main/resources/assets/rebound/shaders", "basic");
 
         // Triangle Test
         int vertexArray = GL30.glGenVertexArrays();
         GL30.glBindVertexArray(vertexArray);
-        float[] triangle = new float[]{
+        var triangle = new float[]{
                 -1.0f, -1.0f, 0.0f,
                 1.0f, -1.0f, 0.0f,
                 0.0f, 1.0f, 0.0f

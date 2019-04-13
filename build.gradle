@@ -1,8 +1,40 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.1'
+    }
+}
+
 apply plugin: 'java'
 apply plugin: 'application'
+apply plugin: 'com.github.johnrengelman.shadow'
+
+sourceCompatibility = 11.0
+targetCompatibility = 11.0
+
+group = "com.raphydaphy.rebound"
+version = "1.0"
+mainClassName = group + ".Rebound"
 
 repositories {
-	mavenCentral()
+    mavenCentral()
+}
+
+jar {
+    from {
+        (configurations.runtime).collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+    manifest {
+        attributes 'Main-Class' : mainClassName
+    }
+}
+
+application {
+    mainClassName = mainClassName
 }
 
 dependencies {

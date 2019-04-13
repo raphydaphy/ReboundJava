@@ -2,11 +2,8 @@ package com.raphydaphy.rebound.engine;
 
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
-
-import java.nio.IntBuffer;
 
 public class Window {
     private final long id;
@@ -20,12 +17,12 @@ public class Window {
         });
 
         if (centered) {
-            try (MemoryStack stack = MemoryStack.stackPush()) {
-                IntBuffer pWidth = stack.mallocInt(1);
-                IntBuffer pHeight = stack.mallocInt(1);
+            try (var stack = MemoryStack.stackPush()) {
+                var pWidth = stack.mallocInt(1);
+                var pHeight = stack.mallocInt(1);
                 GLFW.glfwGetWindowSize(id, pWidth, pHeight);
 
-                GLFWVidMode vidMode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
+                var vidMode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
                 if (vidMode != null)
                     GLFW.glfwSetWindowPos(id, (vidMode.width() - pWidth.get(0)) / 2, (vidMode.height() - pHeight.get(0)) / 2);
             }

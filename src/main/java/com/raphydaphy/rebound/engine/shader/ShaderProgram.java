@@ -3,10 +3,8 @@ package com.raphydaphy.rebound.engine.shader;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryStack;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.IntBuffer;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -25,11 +23,11 @@ public class ShaderProgram {
         GL30.glAttachShader(program, fragmentShader);
         GL30.glLinkProgram(program);
 
-        try (MemoryStack stack = MemoryStack.stackPush()) {
-            IntBuffer success = stack.mallocInt(1);
+        try (var stack = MemoryStack.stackPush()) {
+            var success = stack.mallocInt(1);
             GL30.glGetProgramiv(program, GL30.GL_COMPILE_STATUS, success);
             if (success.get(0) == GL30.GL_FALSE) {
-                IntBuffer logLength = stack.mallocInt(1);
+                var logLength = stack.mallocInt(1);
                 GL30.glGetProgramiv(program, GL30.GL_INFO_LOG_LENGTH, logLength);
                 System.err.println("Failed to link shader program with name " + name + "! Printing info log... \n" + GL30.glGetProgramInfoLog(program));
             }
@@ -49,9 +47,9 @@ public class ShaderProgram {
         GL30.glUseProgram(0);
     }
 
-    protected int compileShader(Path path, int type) {
-        StringBuilder source = new StringBuilder();
-        try (BufferedReader reader = Files.newBufferedReader(path, Charset.forName("UTF-8"))) {
+    private int compileShader(Path path, int type) {
+        var source = new StringBuilder();
+        try (var reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
             String line;
             while ((line = reader.readLine()) != null) {
                 source.append(line);
@@ -63,15 +61,15 @@ public class ShaderProgram {
             return -1;
         }
 
-        int id = GL30.glCreateShader(type);
+        var id = GL30.glCreateShader(type);
         GL30.glShaderSource(id, source.toString());
         GL30.glCompileShader(id);
 
-        try (MemoryStack stack = MemoryStack.stackPush()) {
-            IntBuffer success = stack.mallocInt(1);
+        try (var stack = MemoryStack.stackPush()) {
+            var success = stack.mallocInt(1);
             GL30.glGetShaderiv(id, GL30.GL_COMPILE_STATUS, success);
             if (success.get(0) == GL30.GL_FALSE) {
-                IntBuffer logLength = stack.mallocInt(1);
+                var logLength = stack.mallocInt(1);
                 GL30.glGetShaderiv(id, GL30.GL_INFO_LOG_LENGTH, logLength);
                 System.err.println("Failed to compile shader with path " + path.toString() + "! Printing info log... \n" + GL30.glGetShaderInfoLog(id));
                 GL30.glDeleteShader(id);
