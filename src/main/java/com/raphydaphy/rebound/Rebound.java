@@ -1,6 +1,7 @@
 package com.raphydaphy.rebound;
 
 import com.raphydaphy.rebound.engine.Window;
+import com.raphydaphy.rebound.engine.resource.Texture;
 import com.raphydaphy.rebound.engine.shader.ShaderProgram;
 import com.raphydaphy.rebound.util.ResourceLocation;
 import org.lwjgl.glfw.GLFW;
@@ -38,31 +39,53 @@ public class Rebound {
         GL.createCapabilities();
         GL30.glClearColor(1, 0, 0, 0);
 
-        var program = new ShaderProgram(new ResourceLocation("shaders/basic"));
+        var program = new ShaderProgram(new ResourceLocation("shaders/textured"));
 
         // Triangle Test
         int vertexArray = GL30.glGenVertexArrays();
         GL30.glBindVertexArray(vertexArray);
-        var triangle = new float[]{
+        var verts = new float[]{
                 -1.0f, -1.0f, 0.0f,
                 1.0f, -1.0f, 0.0f,
                 0.0f, 1.0f, 0.0f
         };
-        int vertexBuffer = GL30.glGenBuffers();
-        GL30.glBindBuffer(GL30.GL_ARRAY_BUFFER, vertexBuffer);
-        GL30.glBufferData(GL30.GL_ARRAY_BUFFER, triangle, GL30.GL_STATIC_DRAW);
+        var uvs = new float[]{
+                0, 0,
+                1, 0,
+                0.5f, 1
+        };
+        int vertBuffer = GL30.glGenBuffers();
+        GL30.glBindBuffer(GL30.GL_ARRAY_BUFFER, vertBuffer);
+        GL30.glBufferData(GL30.GL_ARRAY_BUFFER, verts, GL30.GL_STATIC_DRAW);
+        GL30.glBindBuffer(GL30.GL_ARRAY_BUFFER, 0);
+
+        int texBuffer = GL30.glGenBuffers();
+        GL30.glBindBuffer(GL30.GL_ARRAY_BUFFER, texBuffer);
+        GL30.glBufferData(GL30.GL_ARRAY_BUFFER, uvs, GL30.GL_STATIC_DRAW);
+        GL30.glBindBuffer(GL30.GL_ARRAY_BUFFER, 0);
+
+        Texture parchment = new Texture(new ResourceLocation("textures/written_parchment.png"));
 
         while (window.isOpen()) {
             GL30.glClear(GL30.GL_COLOR_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT);
 
             program.bind();
+            parchment.bind();
 
             GL30.glEnableVertexAttribArray(0);
-            GL30.glBindBuffer(GL30.GL_ARRAY_BUFFER, vertexBuffer);
+            GL30.glEnableVertexAttribArray(1);
+
+            GL30.glBindBuffer(GL30.GL_ARRAY_BUFFER, vertBuffer);
             GL30.glVertexAttribPointer(0, 3, GL30.GL_FLOAT, false, 0, 0);
+
+            GL30.glBindBuffer(GL30.GL_ARRAY_BUFFER, texBuffer);
+            GL30.glVertexAttribPointer(1, 2, GL30.GL_FLOAT, false, 0, 0);
+
             GL30.glDrawArrays(GL30.GL_TRIANGLES, 0, 3);
             GL30.glDisableVertexAttribArray(0);
+            GL30.glDisableVertexAttribArray(1);
 
+            parchment.unbind();
             program.unbind();
 
             window.swapBuffers();
