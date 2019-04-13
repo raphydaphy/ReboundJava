@@ -2,13 +2,15 @@ package com.raphydaphy.rebound;
 
 import com.raphydaphy.rebound.engine.Window;
 import com.raphydaphy.rebound.engine.shader.ShaderProgram;
+import com.raphydaphy.rebound.util.ResourceLocation;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL30;
 
 public class Rebound {
-    private static Rebound instance;
+    public static String NAMESPACE = "rebound";
+    private static Rebound INSTANCE;
 
     private Window window;
 
@@ -36,7 +38,7 @@ public class Rebound {
         GL.createCapabilities();
         GL30.glClearColor(1, 0, 0, 0);
 
-        var program = new ShaderProgram("src/main/resources/assets/rebound/shaders", "basic");
+        var program = new ShaderProgram(new ResourceLocation("shaders/basic"));
 
         // Triangle Test
         int vertexArray = GL30.glGenVertexArrays();
@@ -77,11 +79,11 @@ public class Rebound {
     }
 
     public static Rebound getInstance() {
-        return instance;
+        return INSTANCE;
     }
 
     public static void main(String... args) {
-        instance = new Rebound();
-        instance.run();
+        INSTANCE = new Rebound();
+        INSTANCE.run();
     }
 }
