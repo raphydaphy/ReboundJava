@@ -26,13 +26,13 @@ public class Renderer {
         this.rebound = rebound;
         this.vbo = new VertexBuffer(GL30.GL_ARRAY_BUFFER);
         this.buffer = MemoryUtil.memAllocFloat(maxVerts);
-
         vbo.bind().upload(buffer.capacity() << 2);
 
-        this.manager = new TextureManager();
-        manager.addTexture(new ResourceLocation("textures/parchment.png"));
-        manager.addTexture(new ResourceLocation("textures/scepter.png"));
-        manager.stitch(true);
+        TextureStitcher stitcher = new TextureStitcher();
+        stitcher.load(new ResourceLocation("textures/parchment.png"));
+        stitcher.load(new ResourceLocation("textures/scepter.png"));
+        stitcher.load(new ResourceLocation("textures/boiler.png"));
+        this.manager = new TextureManager(stitcher);
     }
 
     public TextureManager getTextureManager() {

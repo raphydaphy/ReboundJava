@@ -4,10 +4,13 @@ import com.raphydaphy.rebound.util.ResourceLocation;
 
 public class Sprite {
     private final ResourceLocation name;
-    private int width, height, offsetX, offsetY, atlasWidth, atlasHeight;
+    private int width, height, offsetX, offsetY;
 
-    public Sprite(ResourceLocation name, int offsetX, int offsetY) {
+
+    public Sprite(ResourceLocation name, int width, int height, int offsetX, int offsetY) {
         this.name = name;
+        this.width = width;
+        this.height = height;
         this.offsetX = offsetX;
         this.offsetY = offsetY;
     }
@@ -24,18 +27,19 @@ public class Sprite {
         return offsetY;
     }
 
-    public void setSize(int width, int height, int atlasWidth, int atlasHeight) {
-        this.width = width;
-        this.height = height;
-        this.atlasWidth = atlasWidth;
-        this.atlasHeight = atlasHeight;
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 
     public void draw(Renderer renderer, int x, int y) {
-        float startX = (float) offsetX / (float) atlasWidth;
-        float startY = (float) offsetY / (float) atlasHeight;
-        float endX = startX + (float) width / (float) atlasWidth;
-        float endY = startY + (float) height / (float) atlasHeight;
+        float startX = (float) offsetX / (float) renderer.getTextureManager().getAtlasWidth();
+        float startY = (float) offsetY / (float) renderer.getTextureManager().getAtlasHeight();
+        float endX = startX + (float) width / (float) renderer.getTextureManager().getAtlasWidth();
+        float endY = startY + (float) height / (float) renderer.getTextureManager().getAtlasHeight();
         x *= renderer.getScale();
         y *= renderer.getScale();
         renderer.vertex(x, y, startX, startY).vertex(x + width * renderer.getScale(), y, endX, startY).vertex(x + width * renderer.getScale(), y + height * renderer.getScale(), endX, endY);

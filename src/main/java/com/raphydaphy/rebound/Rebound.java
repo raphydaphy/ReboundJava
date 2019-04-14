@@ -4,7 +4,6 @@ import com.raphydaphy.rebound.engine.Window;
 import com.raphydaphy.rebound.engine.render.Renderer;
 import com.raphydaphy.rebound.engine.shader.ShaderProgram;
 import com.raphydaphy.rebound.engine.vertex.VertexArray;
-import com.raphydaphy.rebound.util.RenderHelper;
 import com.raphydaphy.rebound.util.ResourceLocation;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -15,6 +14,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Random;
 
 public class Rebound {
     public static String NAMESPACE = "rebound";
@@ -67,6 +67,7 @@ public class Rebound {
 
         ResourceLocation parchment = new ResourceLocation("textures/parchment.png");
         ResourceLocation scepter = new ResourceLocation("textures/scepter.png");
+        ResourceLocation boiler = new ResourceLocation("textures/boiler.png");
 
         this.renderer.getTextureManager().bind();
 
@@ -76,7 +77,8 @@ public class Rebound {
             this.renderer.begin();
 
             this.renderer.getTextureManager().get(parchment).draw(this.renderer, 0, 0);
-            this.renderer.getTextureManager().get(scepter).draw(this.renderer, 20, 5);
+            this.renderer.getTextureManager().get(scepter).draw(this.renderer, 10, 5);
+            this.renderer.getTextureManager().get(boiler).draw(this.renderer, 20, 13);
 
             this.renderer.draw();
 
