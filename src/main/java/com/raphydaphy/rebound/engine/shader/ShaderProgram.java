@@ -59,7 +59,7 @@ public class ShaderProgram {
     }
 
     public void updateProjection(int width, int height) {
-        uniform("projection", new Matrix4f().ortho(0, width / 100f, height / 100f, 0, -1.0f, 1.0f));
+        uniform("projection", new Matrix4f().ortho(0, width, height, 0, -1.0f, 1.0f));
     }
 
     public int getAttributeLocation(String attribute) {

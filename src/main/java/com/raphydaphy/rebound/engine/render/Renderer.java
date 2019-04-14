@@ -3,6 +3,7 @@ package com.raphydaphy.rebound.engine.render;
 import com.raphydaphy.rebound.Rebound;
 import com.raphydaphy.rebound.engine.shader.ShaderProgram;
 import com.raphydaphy.rebound.engine.vertex.VertexBuffer;
+import com.raphydaphy.rebound.util.ResourceLocation;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryUtil;
 
@@ -12,10 +13,12 @@ public class Renderer {
     private static int maxVerts = 65534;
 
     private Rebound rebound;
+    private TextureManager manager;
     private FloatBuffer buffer;
     private ShaderProgram program;
     private VertexBuffer vbo;
     private boolean drawing = false;
+    private int scale = 16;
     private int verts = 0;
     private int components = 0;
 
@@ -25,10 +28,23 @@ public class Renderer {
         this.buffer = MemoryUtil.memAllocFloat(maxVerts);
 
         vbo.bind().upload(buffer.capacity() << 2);
+
+        this.manager = new TextureManager();
+        manager.addTexture(new ResourceLocation("textures/parchment.png"));
+        manager.addTexture(new ResourceLocation("textures/scepter.png"));
+        manager.stitch(true);
+    }
+
+    public TextureManager getTextureManager() {
+        return manager;
     }
 
     public void onResize(int width, int height) {
         program.updateProjection(width, height);
+    }
+
+    public int getScale() {
+        return scale;
     }
 
     public void useProgram(ShaderProgram program) {

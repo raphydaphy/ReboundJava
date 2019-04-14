@@ -12,3 +12,6 @@ classes/
 
 # logs
 *.log
+
+# rebound
+rebound/

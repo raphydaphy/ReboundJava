@@ -4,7 +4,7 @@ import com.raphydaphy.rebound.Rebound;
 
 import java.io.InputStream;
 
-public class ResourceLocation {
+public class ResourceLocation implements Comparable<ResourceLocation> {
     private final String namespace;
     private final String resource;
 
@@ -37,6 +37,25 @@ public class ResourceLocation {
 
     public InputStream getInputStream() {
         return ClassLoader.getSystemClassLoader().getResourceAsStream("assets/" + namespace + "/" + resource);
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        else if (!(other instanceof ResourceLocation)) return false;
+        ResourceLocation location = (ResourceLocation)other;
+        return location.namespace.equals(this.namespace) && location.resource.equals(this.resource);
+    }
+
+    @Override
+    public int hashCode() {
+        int namespaceHash = this.namespace.hashCode();
+        return 31 * namespaceHash + this.resource.hashCode();
+    }
+
+    @Override
+    public int compareTo(ResourceLocation other) {
+        return this.toString().compareTo(other.toString());
     }
 
     @Override

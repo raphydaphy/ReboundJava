@@ -2,14 +2,19 @@ package com.raphydaphy.rebound;
 
 import com.raphydaphy.rebound.engine.Window;
 import com.raphydaphy.rebound.engine.render.Renderer;
-import com.raphydaphy.rebound.engine.render.Texture;
 import com.raphydaphy.rebound.engine.shader.ShaderProgram;
 import com.raphydaphy.rebound.engine.vertex.VertexArray;
+import com.raphydaphy.rebound.util.RenderHelper;
 import com.raphydaphy.rebound.util.ResourceLocation;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL30;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class Rebound {
     public static String NAMESPACE = "rebound";
@@ -44,6 +49,7 @@ public class Rebound {
         GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, 3);
 
         this.window = new Window(this, 720, 720, true, true);
+
     }
 
     private void loop() {
@@ -56,21 +62,23 @@ public class Rebound {
         var program = new ShaderProgram(new ResourceLocation("shaders/textured"));
         program.init(window.getWidth(), window.getHeight());
         this.renderer.useProgram(program);
-        Texture parchment = new Texture(new ResourceLocation("textures/written_parchment.png"));
 
         initialized = true;
+
+        ResourceLocation parchment = new ResourceLocation("textures/parchment.png");
+        ResourceLocation scepter = new ResourceLocation("textures/scepter.png");
+
+        this.renderer.getTextureManager().bind();
 
         while (this.window.isOpen()) {
             GL30.glClear(GL30.GL_COLOR_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT);
 
-            parchment.bind();
-
             this.renderer.begin();
-            this.renderer.vertex(0, 0, 0, 0).vertex(1, 0, 1, 0).vertex(1, 1,  1, 1);
-            this.renderer.vertex(1, 1, 1, 1).vertex(0, 1, 0, 1).vertex(0, 0, 0, 0);
-            this.renderer.draw();
 
-            parchment.unbind();
+            this.renderer.getTextureManager().get(parchment).draw(this.renderer, 0, 0);
+            this.renderer.getTextureManager().get(scepter).draw(this.renderer, 20, 5);
+
+            this.renderer.draw();
 
             this.window.swapBuffers();
             GLFW.glfwPollEvents();
@@ -97,6 +105,15 @@ public class Rebound {
     }
 
     public static void main(String... args) {
+        Path runDir = Paths.get("rebound");
+        if (!Files.exists(runDir)) {
+            try {
+                Files.createDirectories(runDir);
+            } catch(IOException e) {
+                System.err.println("Failed to create run directory! Please move the game to an unprotected folder.");
+                return;
+            }
+        }
         INSTANCE = new Rebound();
     }
 }

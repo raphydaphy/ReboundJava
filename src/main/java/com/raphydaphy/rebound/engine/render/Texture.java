@@ -1,12 +1,13 @@
 package com.raphydaphy.rebound.engine.render;
 
 import com.raphydaphy.rebound.util.ResourceLocation;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL30;
-import org.lwjgl.system.MemoryStack;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class Texture {
     private ResourceLocation name;
@@ -15,12 +16,13 @@ public class Texture {
     public Texture(ResourceLocation path) {
         this.name = path;
         int[] pixels = null;
-        try {
-            BufferedImage image = ImageIO.read(path.getInputStream());
+        try (InputStream stream = path.getInputStream()) {
+            BufferedImage image = ImageIO.read(stream);
             this.width = image.getWidth();
             this.height = image.getHeight();
             pixels = new int[this.width * this.height];
             image.getRGB(0, 0, this.width, this.height, pixels, 0, this.width);
+            image.flush();
         } catch (IOException e) {
             System.err.println("Failed to load texture " + path + "! Printing stack trace...");
             e.printStackTrace();
@@ -42,11 +44,9 @@ public class Texture {
             GL30.glTexParameteri(GL30.GL_TEXTURE_2D, GL30.GL_TEXTURE_MIN_FILTER, GL30.GL_NEAREST);
             GL30.glTexParameteri(GL30.GL_TEXTURE_2D, GL30.GL_TEXTURE_MAG_FILTER, GL30.GL_NEAREST);
 
-            try (var stack = MemoryStack.stackPush()) {
-                var buffer = stack.mallocInt(data.length);
-                buffer.put(data).flip();
-                GL30.glTexImage2D(GL30.GL_TEXTURE_2D, 0, GL30.GL_RGBA, this.width, this.height, 0, GL30.GL_RGBA, GL30.GL_UNSIGNED_BYTE, buffer);
-            }
+            var buffer = BufferUtils.createIntBuffer(data.length);
+            buffer.put(data).flip();
+            GL30.glTexImage2D(GL30.GL_TEXTURE_2D, 0, GL30.GL_RGBA, this.width, this.height, 0, GL30.GL_RGBA, GL30.GL_UNSIGNED_BYTE, buffer);
 
             GL30.glBindTexture(GL30.GL_TEXTURE_2D, 0);
         }
