@@ -15,6 +15,7 @@ public class Rebound {
     public static String NAMESPACE = "rebound";
     private static Rebound INSTANCE;
 
+    private boolean initialized = false;
     private Window window;
     private Renderer renderer;
 
@@ -22,6 +23,13 @@ public class Rebound {
         init();
         loop();
         cleanup();
+    }
+
+    public void onResized(int width, int height) {
+        if (initialized) {
+            renderer.onResize(width, height);
+            GL30.glViewport(0, 0, width, height);
+        }
     }
 
     private void init() {
@@ -35,32 +43,33 @@ public class Rebound {
         GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MAJOR, 3);
         GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, 3);
 
-        this.window = new Window(720, 720, true, true);
+        this.window = new Window(this, 720, 720, true, true);
     }
 
     private void loop() {
         GL.createCapabilities();
         GL30.glClearColor(1, 0, 0, 0);
 
+        VertexArray vao = new VertexArray().bind();
         this.renderer = new Renderer(this);
 
         var program = new ShaderProgram(new ResourceLocation("shaders/textured"));
+        program.init(window.getWidth(), window.getHeight());
         this.renderer.useProgram(program);
         Texture parchment = new Texture(new ResourceLocation("textures/written_parchment.png"));
-        VertexArray vao = new VertexArray();
+
+        initialized = true;
 
         while (this.window.isOpen()) {
             GL30.glClear(GL30.GL_COLOR_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT);
 
             parchment.bind();
-            vao.bind();
 
             this.renderer.begin();
-            this.renderer.vertex(-0.5f, -0.5f, 0, 1).vertex(0.5f, -0.5f, 1, 1).vertex(0.5f, 0.5f,  1, 0);
-            this.renderer.vertex(0.5f, 0.5f, 1, 0).vertex(-0.5f, 0.5f, 0, 0).vertex(-0.5f, -0.5f, 0, 1);
+            this.renderer.vertex(0, 0, 0, 0).vertex(1, 0, 1, 0).vertex(1, 1,  1, 1);
+            this.renderer.vertex(1, 1, 1, 1).vertex(0, 1, 0, 1).vertex(0, 0, 0, 0);
             this.renderer.draw();
 
-            vao.unbind();
             parchment.unbind();
 
             this.window.swapBuffers();

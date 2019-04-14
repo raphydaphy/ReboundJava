@@ -21,8 +21,14 @@ public class Renderer {
 
     public Renderer(Rebound rebound) {
         this.rebound = rebound;
-        this.buffer = MemoryUtil.memAllocFloat(maxVerts);
         this.vbo = new VertexBuffer(GL30.GL_ARRAY_BUFFER);
+        this.buffer = MemoryUtil.memAllocFloat(maxVerts);
+
+        vbo.bind().upload(buffer.capacity() << 2);
+    }
+
+    public void onResize(int width, int height) {
+        program.updateProjection(width, height);
     }
 
     public void useProgram(ShaderProgram program) {

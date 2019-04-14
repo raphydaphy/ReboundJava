@@ -1,5 +1,6 @@
 package com.raphydaphy.rebound.engine;
 
+import com.raphydaphy.rebound.Rebound;
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.system.MemoryStack;
@@ -11,12 +12,18 @@ public class Window {
     private int width;
     private int height;
 
-    public Window(int width, int height, boolean vsync, boolean centered) {
+    public Window(Rebound rebound, int width, int height, boolean vsync, boolean centered) {
         id = GLFW.glfwCreateWindow(width, height, "Rebound", MemoryUtil.NULL, MemoryUtil.NULL);
         if (id == MemoryUtil.NULL) throw new RuntimeException("Failed to create GLFW window");
 
         GLFW.glfwSetKeyCallback(id, (window, key, scancode, action, mods) -> {
             if (key == GLFW.GLFW_KEY_ESCAPE && action == GLFW.GLFW_RELEASE) GLFW.glfwSetWindowShouldClose(window, true);
+        });
+
+        GLFW.glfwSetFramebufferSizeCallback(id, (window, newWidth, newHeight) -> {
+            this.width = newWidth;
+            this.height = newHeight;
+            rebound.onResized(newWidth, newHeight);
         });
 
         if (centered) {

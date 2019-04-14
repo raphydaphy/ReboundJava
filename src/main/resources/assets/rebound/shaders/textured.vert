@@ -12,5 +12,5 @@ void main() {
     passUV = uv;
 
     mat4 mvp = projection * view * model;
-    gl_Position = vec4(position, 0, 1);
+    gl_Position = mvp * vec4(position, 1, 1);
 }

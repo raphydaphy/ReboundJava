@@ -2,6 +2,8 @@ package com.raphydaphy.rebound.engine.shader;
 
 import com.raphydaphy.rebound.util.ResourceLocation;
 import org.joml.Matrix4f;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryStack;
 
@@ -48,11 +50,16 @@ public class ShaderProgram {
 
     public void init(int width, int height) {
         bind();
+
         attribute("position", 2);
         attribute("uv", 2);
         uniform("model", new Matrix4f());
         uniform("view", new Matrix4f());
-        uniform("projection", new Matrix4f().ortho(0.0F, width, height, 0.0F, -1.0F, 1.0F));
+        updateProjection(width, height);
+    }
+
+    public void updateProjection(int width, int height) {
+        uniform("projection", new Matrix4f().ortho(0, width / 100f, height / 100f, 0, -1.0f, 1.0f));
     }
 
     public int getAttributeLocation(String attribute) {
@@ -64,7 +71,7 @@ public class ShaderProgram {
         int location = getAttributeLocation(name);
         GL30.glEnableVertexAttribArray(location);
         GL30.glVertexAttribPointer(location, size, GL30.GL_FLOAT, false, getVertexSize() << 2, attribOffset);
-        attribOffset += size;
+        attribOffset += size << 2;
     }
 
     private int getUniformLocation(String uniform) {

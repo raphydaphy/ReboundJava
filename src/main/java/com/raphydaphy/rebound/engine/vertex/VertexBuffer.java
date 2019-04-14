@@ -23,6 +23,11 @@ public class VertexBuffer {
         return this;
     }
 
+    public VertexBuffer upload(long data) {
+        GL30.glBufferData(type, data, GL30.GL_STATIC_DRAW);
+        return this;
+    }
+
     public VertexBuffer upload(float[] data) {
         GL30.glBufferData(type, data, GL30.GL_STATIC_DRAW);
         return this;
