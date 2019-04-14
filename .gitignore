@@ -14,4 +14,4 @@ classes/
 *.log
 
 # rebound
-rebound/
+rebound/*
