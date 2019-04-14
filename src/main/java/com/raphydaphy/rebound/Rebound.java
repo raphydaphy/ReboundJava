@@ -5,7 +5,6 @@ import com.raphydaphy.rebound.engine.render.Renderer;
 import com.raphydaphy.rebound.engine.render.Texture;
 import com.raphydaphy.rebound.engine.shader.ShaderProgram;
 import com.raphydaphy.rebound.engine.vertex.VertexArray;
-import com.raphydaphy.rebound.util.RenderHelper;
 import com.raphydaphy.rebound.util.ResourceLocation;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -19,7 +18,7 @@ public class Rebound {
     private Window window;
     private Renderer renderer;
 
-    private void run() {
+    private Rebound() {
         init();
         loop();
         cleanup();
@@ -45,7 +44,7 @@ public class Rebound {
 
         this.renderer = new Renderer();
 
-        this.renderer.useProgram(new ShaderProgram(new ResourceLocation("shaders/basic")));
+        this.renderer.useProgram(new ShaderProgram(new ResourceLocation("shaders/textured")));
         Texture parchment = new Texture(new ResourceLocation("textures/written_parchment.png"));
 
         while (this.window.isOpen()) {
@@ -80,6 +79,5 @@ public class Rebound {
 
     public static void main(String... args) {
         INSTANCE = new Rebound();
-        INSTANCE.run();
     }
 }

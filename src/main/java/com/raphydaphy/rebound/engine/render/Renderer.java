@@ -71,18 +71,20 @@ public class Renderer {
             buffer.flip();
             program.bind();
             GL30.glEnableVertexAttribArray(0);
-            //GL30.glEnableVertexAttribArray(1);
+            GL30.glEnableVertexAttribArray(1);
 
             vbo.bind().upload(buffer);
 
-            GL30.glVertexAttribPointer(0, 3, GL30.GL_FLOAT, false, 2, 0);
-           // GL30.glVertexAttribPointer(1, 2, GL30.GL_FLOAT, false, 3, 3);
+            int stride = program.getVertexSize() << 2;
+
+            GL30.glVertexAttribPointer(0, 3, GL30.GL_FLOAT, false, stride, 0);
+            GL30.glVertexAttribPointer(1, 2, GL30.GL_FLOAT, false, stride, 3 << 2);
             GL30.glDrawArrays(GL30.GL_TRIANGLES, 0, verts);
 
             vbo.unbind();
 
             GL30.glDisableVertexAttribArray(0);
-           // GL30.glDisableVertexAttribArray(1);
+            GL30.glDisableVertexAttribArray(1);
 
             program.unbind();
             buffer.clear();
