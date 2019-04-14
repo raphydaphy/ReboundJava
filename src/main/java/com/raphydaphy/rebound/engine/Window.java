@@ -19,9 +19,7 @@ public class Window {
         id = GLFW.glfwCreateWindow(width, height, "Rebound", MemoryUtil.NULL, MemoryUtil.NULL);
         if (id == MemoryUtil.NULL) throw new RuntimeException("Failed to create GLFW window");
 
-        GLFW.glfwSetKeyCallback(id, (window, key, scancode, action, mods) -> {
-            if (key == GLFW.GLFW_KEY_ESCAPE && action == GLFW.GLFW_RELEASE) GLFW.glfwSetWindowShouldClose(window, true);
-        });
+        GLFW.glfwSetKeyCallback(id, (window, key, scancode, action, mods) -> rebound.onKey(key, action) );
 
         GLFW.glfwSetFramebufferSizeCallback(id, (window, newWidth, newHeight) -> {
             this.width = newWidth;
@@ -33,6 +31,8 @@ public class Window {
             this.mouseX = (float) mouseX;
             this.mouseY = (float) mouseY;
         });
+
+        GLFW.glfwSetMouseButtonCallback(id, ((window, button, action, mods) -> rebound.onMouse(button, action, mouseX, mouseY)));
 
         if (centered) {
             try (var stack = MemoryStack.stackPush()) {
@@ -73,6 +73,10 @@ public class Window {
     public void swapBuffers()
     {
         GLFW.glfwSwapBuffers(id);
+    }
+
+    public void close() {
+        GLFW.glfwSetWindowShouldClose(id, true);
     }
 
     public void destroy() {

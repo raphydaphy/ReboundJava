@@ -36,13 +36,21 @@ public class Sprite {
     }
 
     public void draw(Renderer renderer, int x, int y) {
-        float startX = (float) offsetX / (float) renderer.getTextureManager().getAtlasWidth();
-        float startY = (float) offsetY / (float) renderer.getTextureManager().getAtlasHeight();
-        float endX = startX + (float) width / (float) renderer.getTextureManager().getAtlasWidth();
-        float endY = startY + (float) height / (float) renderer.getTextureManager().getAtlasHeight();
-        x *= renderer.getScale();
-        y *= renderer.getScale();
-        renderer.vertex(x, y, startX, startY).vertex(x + width * renderer.getScale(), y, endX, startY).vertex(x + width * renderer.getScale(), y + height * renderer.getScale(), endX, endY);
-        renderer.vertex(x + width * renderer.getScale(), y + height * renderer.getScale(), endX, endY).vertex(x, y + height * renderer.getScale(), startX, endY).vertex(x, y, startX, startY);
+        draw(renderer, x, y, renderer.getScale());
+    }
+
+    public void draw(Renderer renderer, int x, int y, int scale) {
+        draw(renderer, x, y, getWidth(), getHeight(), 0, 0, getWidth(), getHeight(), scale);
+    }
+
+    public void draw(Renderer renderer, int x, int y, int width, int height, int u, int v, int maxU, int maxV, int scale) {
+        float startX = (float) (offsetX + u) / (float) renderer.getTextureManager().getAtlasWidth();
+        float startY = (float) (offsetY + v) / (float) renderer.getTextureManager().getAtlasHeight();
+        float endX = startX + (float) maxU / (float) renderer.getTextureManager().getAtlasWidth();
+        float endY = startY + (float) maxV / (float) renderer.getTextureManager().getAtlasHeight();
+        x *= scale;
+        y *= scale;
+        renderer.vertex(x, y, startX, startY).vertex(x + width * scale, y, endX, startY).vertex(x + width * scale, y + height * scale, endX, endY);
+        renderer.vertex(x + width * scale, y + height * scale, endX, endY).vertex(x, y + height * scale, startX, endY).vertex(x, y, startX, startY);
     }
 }

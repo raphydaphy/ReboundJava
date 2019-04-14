@@ -33,6 +33,8 @@ public class Renderer {
         stitcher.load(new ResourceLocation("textures/scepter.png"));
         stitcher.load(new ResourceLocation("textures/boiler.png"));
         stitcher.load(new ResourceLocation("textures/island.png"));
+        stitcher.load(new ResourceLocation("textures/slot.png"));
+        stitcher.load(new ResourceLocation("textures/play.png"));
         this.manager = new TextureManager(stitcher);
     }
 
