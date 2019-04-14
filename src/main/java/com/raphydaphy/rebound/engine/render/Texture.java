@@ -1,4 +1,4 @@
-package com.raphydaphy.rebound.engine.resource;
+package com.raphydaphy.rebound.engine.render;
 
 import com.raphydaphy.rebound.util.ResourceLocation;
 import org.lwjgl.opengl.GL30;

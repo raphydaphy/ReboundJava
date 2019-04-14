@@ -5,5 +5,9 @@ out vec3 color;
 uniform sampler2D textureSampler;
 
 void main() {
-    color = texture(textureSampler, UV).rgb;
+    vec4 textureSample = texture(textureSampler, UV);
+    if (textureSample.a < 0.1) {
+        discard;
+    }
+    color = textureSample.rgb;
 }

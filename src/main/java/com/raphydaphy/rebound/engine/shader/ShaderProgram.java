@@ -78,4 +78,8 @@ public class ShaderProgram {
         }
         return id;
     }
+
+    public int getVertexSize() {
+        return 5;
+    }
 }

@@ -9,3 +9,6 @@ classes/
 *.iml
 *.ipr
 *.iws
+
+# logs
+*.log
