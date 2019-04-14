@@ -27,6 +27,10 @@ public class ResourceLocation implements Comparable<ResourceLocation> {
         this.resource = resource;
     }
 
+    public ResourceLocation append(String suffix) {
+        return new ResourceLocation(this.namespace, this.resource + suffix);
+    }
+
     public String getNamespace() {
         return namespace;
     }

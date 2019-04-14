@@ -29,12 +29,7 @@ public class Renderer {
         vbo.bind().upload(buffer.capacity() << 2);
 
         TextureStitcher stitcher = new TextureStitcher();
-        stitcher.load(new ResourceLocation("textures/parchment.png"));
-        stitcher.load(new ResourceLocation("textures/scepter.png"));
-        stitcher.load(new ResourceLocation("textures/boiler.png"));
-        stitcher.load(new ResourceLocation("textures/island.png"));
-        stitcher.load(new ResourceLocation("textures/slot.png"));
-        stitcher.load(new ResourceLocation("textures/play.png"));
+        stitcher.loadAll(new ResourceLocation("textures"));
         this.manager = new TextureManager(stitcher);
     }
 

@@ -98,8 +98,8 @@ public class Rebound {
         ResourceLocation scepter = new ResourceLocation("textures/scepter.png");
         ResourceLocation boiler = new ResourceLocation("textures/boiler.png");
         ResourceLocation island = new ResourceLocation("textures/island.png");
-        ResourceLocation slot = new ResourceLocation("textures/slot.png");
-        ResourceLocation play = new ResourceLocation("textures/play.png");
+        ResourceLocation slot = new ResourceLocation("textures/ui/slot.png");
+        ResourceLocation play = new ResourceLocation("textures/ui/play.png");
 
         this.renderer.getTextureManager().bind();
 

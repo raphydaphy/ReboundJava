@@ -9,10 +9,12 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.*;
+import java.util.*;
+import java.util.stream.Stream;
 
 public class TextureStitcher {
     private List<ResourceLocation> toStitch = new ArrayList<>();
@@ -149,6 +151,47 @@ public class TextureStitcher {
 
     public void load(ResourceLocation name) {
         toStitch.add(name);
+    }
+
+    public void loadAll(ResourceLocation dir) {
+        String dirString = "assets/" + dir.getNamespace() + "/" + dir.getResource();
+        try {
+            URL url = ClassLoader.getSystemClassLoader().getResource(dirString);
+            if (url == null) {
+                System.err.println("Failed to access directory for texture stitching with name " + dir + "!");
+                return;
+            }
+            URI uri = url.toURI();
+            if (uri.getScheme().equals("jar")) {
+                FileSystem fileSystem = FileSystems.newFileSystem(uri, Collections.<String, Object>emptyMap());
+                loadAll(dir, fileSystem.getPath(dirString));
+            } else {
+                loadAll(dir, Paths.get(uri));
+            }
+        } catch (Exception e) {
+            System.err.println("Failed to load textures from directory " + dir + "! Printing stack trace...");
+            e.printStackTrace();
+        }
+    }
+
+    private void loadAll(ResourceLocation dir, Path path) throws IOException {
+        Files.walk(path, 1).forEach((fPath) -> {
+            if (Files.isDirectory(fPath)) {
+                if (!fPath.equals(path)) {
+                    try {
+                        loadAll(dir.append("/" + fPath.getName(path.getNameCount()).toString()), fPath);
+                    } catch (IOException e) {
+                        System.err.println("Failed to load nested textures from " + fPath + "! Printing stack trace...");
+                    }
+                }
+            } else {
+                String name = fPath.getName(path.getNameCount()).toString();
+                if (name.endsWith("png")) {
+                    ResourceLocation loc = dir.append("/" + name);
+                    load(loc);
+                }
+            }
+        });
     }
 
     private static class StitchPos {
