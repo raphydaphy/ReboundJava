@@ -20,6 +20,7 @@ mainClassName = group + ".Rebound"
 
 repositories {
     mavenCentral()
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
 }
 
 jar {
@@ -49,4 +50,7 @@ dependencies {
 
     // Nullable
     compileOnly "com.google.code.findbugs:jsr305:3.0.1"
+
+    // JOML
+    implementation "org.joml:joml:${project.joml_version}"
 }

@@ -1,6 +1,7 @@
 package com.raphydaphy.rebound.engine.shader;
 
 import com.raphydaphy.rebound.util.ResourceLocation;
+import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryStack;
 
@@ -8,11 +9,17 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ShaderProgram {
     private final int program;
     private final int vertexShader;
     private final int fragmentShader;
+
+    private int attribOffset = 0;
+    private Map<String, Integer> uniforms = new HashMap<>();
+    private Map<String, Integer> attributes = new HashMap<>();
 
     public ShaderProgram(ResourceLocation source) {
         vertexShader = compileShader(new ResourceLocation(source.getNamespace(), source.getResource() + ".vert"), GL30.GL_VERTEX_SHADER);
@@ -37,6 +44,39 @@ public class ShaderProgram {
         GL30.glDetachShader(program, fragmentShader);
         GL30.glDeleteShader(vertexShader);
         GL30.glDeleteShader(fragmentShader);
+    }
+
+    public void init(int width, int height) {
+        bind();
+        attribute("position", 2);
+        attribute("uv", 2);
+        uniform("model", new Matrix4f());
+        uniform("view", new Matrix4f());
+        uniform("projection", new Matrix4f().ortho(0.0F, width, height, 0.0F, -1.0F, 1.0F));
+    }
+
+    public int getAttributeLocation(String attribute) {
+        bind();
+        return attributes.computeIfAbsent(attribute, (name) -> GL30.glGetAttribLocation(program, name));
+    }
+
+    public void attribute(String name, int size) {
+        int location = getAttributeLocation(name);
+        GL30.glEnableVertexAttribArray(location);
+        GL30.glVertexAttribPointer(location, size, GL30.GL_FLOAT, false, getVertexSize() << 2, attribOffset);
+        attribOffset += size;
+    }
+
+    private int getUniformLocation(String uniform) {
+        bind();
+        return uniforms.computeIfAbsent(uniform, (name) -> GL30.glGetUniformLocation(program, name));
+    }
+
+    public void uniform(String name, Matrix4f value) {
+        int location = getUniformLocation(name);
+        try (MemoryStack stack = MemoryStack.stackPush()) {
+            GL30.glUniformMatrix4fv(location, false, value.get(stack.mallocFloat(16)));
+        }
     }
 
     public void bind() {
@@ -80,6 +120,6 @@ public class ShaderProgram {
     }
 
     public int getVertexSize() {
-        return 5;
+        return 4;
     }
 }

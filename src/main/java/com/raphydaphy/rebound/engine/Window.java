@@ -8,6 +8,9 @@ import org.lwjgl.system.MemoryUtil;
 public class Window {
     private final long id;
 
+    private int width;
+    private int height;
+
     public Window(int width, int height, boolean vsync, boolean centered) {
         id = GLFW.glfwCreateWindow(width, height, "Rebound", MemoryUtil.NULL, MemoryUtil.NULL);
         if (id == MemoryUtil.NULL) throw new RuntimeException("Failed to create GLFW window");
@@ -31,6 +34,17 @@ public class Window {
         GLFW.glfwMakeContextCurrent(id);
         GLFW.glfwSwapInterval(vsync ? 1 : 0);
         GLFW.glfwShowWindow(id);
+
+        this.width = width;
+        this.height = height;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return this.height;
     }
 
     public void swapBuffers()

@@ -42,27 +42,33 @@ public class Rebound {
         GL.createCapabilities();
         GL30.glClearColor(1, 0, 0, 0);
 
-        this.renderer = new Renderer();
+        this.renderer = new Renderer(this);
 
-        this.renderer.useProgram(new ShaderProgram(new ResourceLocation("shaders/textured")));
+        var program = new ShaderProgram(new ResourceLocation("shaders/textured"));
+        this.renderer.useProgram(program);
         Texture parchment = new Texture(new ResourceLocation("textures/written_parchment.png"));
+        VertexArray vao = new VertexArray();
 
         while (this.window.isOpen()) {
             GL30.glClear(GL30.GL_COLOR_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT);
 
             parchment.bind();
-            VertexArray vao = new VertexArray().bind();
+            vao.bind();
 
             this.renderer.begin();
-            this.renderer.vertex(-0.5f, -0.5f, 0, 0, 1).vertex(0.5f, -0.5f, 0, 1, 1).vertex(0.5f, 0.5f, 0, 1, 0);
-            this.renderer.vertex(0.5f, 0.5f, 0, 1, 0).vertex(-0.5f, 0.5f, 0, 0, 0).vertex(-0.5f, -0.5f, 0, 0, 1);
+            this.renderer.vertex(-0.5f, -0.5f, 0, 1).vertex(0.5f, -0.5f, 1, 1).vertex(0.5f, 0.5f,  1, 0);
+            this.renderer.vertex(0.5f, 0.5f, 1, 0).vertex(-0.5f, 0.5f, 0, 0).vertex(-0.5f, -0.5f, 0, 1);
             this.renderer.draw();
-            vao.delete();
+
+            vao.unbind();
             parchment.unbind();
 
             this.window.swapBuffers();
             GLFW.glfwPollEvents();
         }
+
+        vao.delete();
+        renderer.delete();
     }
 
     private void cleanup() {
@@ -71,6 +77,10 @@ public class Rebound {
         GLFW.glfwTerminate();
         GLFWErrorCallback errorCallback = GLFW.glfwSetErrorCallback(null);
         if (errorCallback != null) errorCallback.free();
+    }
+
+    public Window getWindow() {
+        return window;
     }
 
     public static Rebound getInstance() {

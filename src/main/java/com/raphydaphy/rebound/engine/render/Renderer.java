@@ -1,5 +1,6 @@
 package com.raphydaphy.rebound.engine.render;
 
+import com.raphydaphy.rebound.Rebound;
 import com.raphydaphy.rebound.engine.shader.ShaderProgram;
 import com.raphydaphy.rebound.engine.vertex.VertexBuffer;
 import org.lwjgl.opengl.GL30;
@@ -10,6 +11,7 @@ import java.nio.FloatBuffer;
 public class Renderer {
     private static int maxVerts = 65534;
 
+    private Rebound rebound;
     private FloatBuffer buffer;
     private ShaderProgram program;
     private VertexBuffer vbo;
@@ -17,7 +19,8 @@ public class Renderer {
     private int verts = 0;
     private int components = 0;
 
-    public Renderer() {
+    public Renderer(Rebound rebound) {
+        this.rebound = rebound;
         this.buffer = MemoryUtil.memAllocFloat(maxVerts);
         this.vbo = new VertexBuffer(GL30.GL_ARRAY_BUFFER);
     }
@@ -30,8 +33,8 @@ public class Renderer {
         this.program = program;
     }
 
-    public Renderer vertex(float x, float y, float z, float u, float v) {
-        return with(x).with(y).with(z).with(u).with(v);
+    public Renderer vertex(float x, float y, float u, float v) {
+        return with(x).with(y).with(u).with(v);
     }
 
     public Renderer with(float value) {
@@ -70,24 +73,19 @@ public class Renderer {
         if (verts > 0) {
             buffer.flip();
             program.bind();
-            GL30.glEnableVertexAttribArray(0);
-            GL30.glEnableVertexAttribArray(1);
 
             vbo.bind().upload(buffer);
 
-            int stride = program.getVertexSize() << 2;
-
-            GL30.glVertexAttribPointer(0, 3, GL30.GL_FLOAT, false, stride, 0);
-            GL30.glVertexAttribPointer(1, 2, GL30.GL_FLOAT, false, stride, 3 << 2);
             GL30.glDrawArrays(GL30.GL_TRIANGLES, 0, verts);
 
             vbo.unbind();
 
-            GL30.glDisableVertexAttribArray(0);
-            GL30.glDisableVertexAttribArray(1);
-
             program.unbind();
             buffer.clear();
         }
+    }
+
+    public void delete() {
+        vbo.delete();
     }
 }
