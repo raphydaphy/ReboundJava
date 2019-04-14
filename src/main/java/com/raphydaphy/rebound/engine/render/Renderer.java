@@ -18,7 +18,7 @@ public class Renderer {
     private ShaderProgram program;
     private VertexBuffer vbo;
     private boolean drawing = false;
-    private int scale = 16;
+    private int scale = 4;
     private int verts = 0;
     private int components = 0;
 
@@ -32,6 +32,7 @@ public class Renderer {
         stitcher.load(new ResourceLocation("textures/parchment.png"));
         stitcher.load(new ResourceLocation("textures/scepter.png"));
         stitcher.load(new ResourceLocation("textures/boiler.png"));
+        stitcher.load(new ResourceLocation("textures/island.png"));
         this.manager = new TextureManager(stitcher);
     }
 

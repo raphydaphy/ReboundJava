@@ -49,12 +49,11 @@ public class Rebound {
         GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, 3);
 
         this.window = new Window(this, 720, 720, true, true);
-
     }
 
     private void loop() {
         GL.createCapabilities();
-        GL30.glClearColor(1, 0, 0, 0);
+        GL30.glClearColor(0.725490f, 0.819607f, 0.968627f, 0);
 
         VertexArray vao = new VertexArray().bind();
         this.renderer = new Renderer(this);
@@ -68,6 +67,7 @@ public class Rebound {
         ResourceLocation parchment = new ResourceLocation("textures/parchment.png");
         ResourceLocation scepter = new ResourceLocation("textures/scepter.png");
         ResourceLocation boiler = new ResourceLocation("textures/boiler.png");
+        ResourceLocation island = new ResourceLocation("textures/island.png");
 
         this.renderer.getTextureManager().bind();
 
@@ -77,8 +77,9 @@ public class Rebound {
             this.renderer.begin();
 
             this.renderer.getTextureManager().get(parchment).draw(this.renderer, 0, 0);
-            this.renderer.getTextureManager().get(scepter).draw(this.renderer, 10, 5);
             this.renderer.getTextureManager().get(boiler).draw(this.renderer, 20, 13);
+            this.renderer.getTextureManager().get(island).draw(this.renderer, 80, 30);
+            this.renderer.getTextureManager().get(scepter).draw(this.renderer, (int)window.getMouseX() / renderer.getScale() - 8, (int)window.getMouseY() / renderer.getScale() - 8);
 
             this.renderer.draw();
 

@@ -12,6 +12,9 @@ public class Window {
     private int width;
     private int height;
 
+    private float mouseX;
+    private float mouseY;
+
     public Window(Rebound rebound, int width, int height, boolean vsync, boolean centered) {
         id = GLFW.glfwCreateWindow(width, height, "Rebound", MemoryUtil.NULL, MemoryUtil.NULL);
         if (id == MemoryUtil.NULL) throw new RuntimeException("Failed to create GLFW window");
@@ -24,6 +27,11 @@ public class Window {
             this.width = newWidth;
             this.height = newHeight;
             rebound.onResized(newWidth, newHeight);
+        });
+
+        GLFW.glfwSetCursorPosCallback(id, (window, mouseX, mouseY) -> {
+            this.mouseX = (float) mouseX;
+            this.mouseY = (float) mouseY;
         });
 
         if (centered) {
@@ -52,6 +60,14 @@ public class Window {
 
     public int getHeight() {
         return this.height;
+    }
+
+    public float getMouseX() {
+        return mouseX;
+    }
+
+    public float getMouseY() {
+        return mouseY;
     }
 
     public void swapBuffers()
