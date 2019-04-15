@@ -17,9 +17,11 @@ import java.util.Map;
 public class Font {
     Map<Integer, Character> characters = new HashMap<>();
     private ResourceName atlas;
+    private int lineHeight;
 
     public Font(ResourceName name) {
         this.atlas = name.append(".png");
+        this.lineHeight = 30;
         name = name.append(".json");
         InputStream stream = name.getInputStream();
         var source = new StringBuilder();
@@ -28,6 +30,7 @@ public class Font {
             while ((line = reader.readLine()) != null) {
                 source.append(line);
             }
+            stream.close();
         } catch (IOException e) {
             System.err.println("Failed to read font from " + name + "! Printing stack trace...");
             e.printStackTrace();
@@ -46,6 +49,30 @@ public class Font {
         draw(renderer, text, x, y, color, 1);
     }
 
+    public void draw(Renderer renderer, String text, int x, int y, int color, int size, int width) {
+        String[] words = text.split(" ");
+        StringBuilder line = new StringBuilder();
+        int curWidth = 0;
+        for (String word : words) {
+            int length = 0;
+            for (int i = 0; i < word.length(); i++) {
+                int charID = (int)word.charAt(i);
+                if (!characters.containsKey(charID)) continue;
+                length += characters.get(charID).xAdvance;
+            }
+            if (curWidth >= width && line.length() > 0) {
+                draw(renderer, line.toString(), x, y, color, size);
+                line = new StringBuilder();
+                curWidth = 0;
+                y += lineHeight;
+            }
+            length += characters.get((int)' ').xAdvance;
+            line.append(word);
+            line.append(" ");
+            curWidth += length;
+        }
+        draw(renderer, line.toString(), x, y, color, size);
+    }
     public void draw(Renderer renderer, String text, int x, int y, int color, int size) {
         Sprite sprite = renderer.getTextureManager().get(atlas);
         for (int i = 0; i < text.length(); i++) {

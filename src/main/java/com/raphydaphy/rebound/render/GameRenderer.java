@@ -62,6 +62,7 @@ public class GameRenderer {
         if (rebound.getState() == GameState.MENU) {
             font.draw(this.renderer, "Rebound", 40, 20, 0, 2);
             font.draw(this.renderer, "a super epic game", 42, 70, 0x46494f);
+            font.draw(this.renderer, "Made by raphydaphy with moral support from (many people). This paragraph is intentionally long to test line wrapping! Hopefully it doesn't break anything!", window.getWidth() / 2 - 200, window.getHeight() - 300, 0x46494f, 1, 400);
             this.renderer.getTextureManager().get(play).draw(this.renderer, window.getWidth() / 4 - 64, window.getHeight() / 4 - 16, 2);
         } else {
             this.renderer.getTextureManager().get(slot).draw(this.renderer, window.getWidth() / 4 - 16, window.getHeight() / 2 - 36, 2);
