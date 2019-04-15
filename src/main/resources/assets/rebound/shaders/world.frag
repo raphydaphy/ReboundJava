@@ -1,7 +1,8 @@
 #version 330 core
+in vec3 passColor;
 in vec2 passUV;
 
-out vec3 color;
+out vec3 glColor;
 
 uniform sampler2D textureSampler;
 
@@ -10,5 +11,5 @@ void main() {
     if (textureSample.a < 0.001) {
         discard;
     }
-    color = textureSample.rgb;
+    glColor = passColor * textureSample.rgb;
 }

@@ -47,7 +47,7 @@ public class GameRenderer {
 
         if (rebound.getState() == GameState.INGAME) {
             this.renderer.getTextureManager().get(parchment).draw(this.renderer, 0, 0);
-            this.renderer.getTextureManager().get(boiler).draw(this.renderer, 20, 13);
+            this.renderer.getTextureManager().get(boiler).draw(this.renderer, 20, 13, 24, 60, 0, 0, 24, 60, 4, 0.3f, 1, 1);
             this.renderer.getTextureManager().get(island).draw(this.renderer, 80, 30);
         }
 

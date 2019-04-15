@@ -34,6 +34,7 @@ public class Renderer {
 
         TextureStitcher stitcher = new TextureStitcher();
         stitcher.loadAll(new ResourceName("textures"));
+        stitcher.loadAll(new ResourceName("fonts"));
         this.manager = new TextureManager(stitcher);
     }
 
@@ -57,8 +58,8 @@ public class Renderer {
         this.program = program;
     }
 
-    public Renderer vertex(float x, float y, float u, float v) {
-        return with(x).with(y).with(u).with(v);
+    public Renderer vertex(float x, float y, float u, float v, float r, float g, float b) {
+        return with(x).with(y).with(u).with(v).with(r).with(g).with(b);
     }
 
     public Renderer with(float value) {

@@ -45,13 +45,17 @@ public class Sprite {
     }
 
     public void draw(Renderer renderer, int x, int y, int width, int height, int u, int v, int maxU, int maxV, int scale) {
+        draw(renderer, x, y, width, height, u, v, maxU, maxV, scale, 1, 1, 1);
+    }
+
+    public void draw(Renderer renderer, int x, int y, int width, int height, int u, int v, int maxU, int maxV, int scale, float red, float green, float blue) {
         float startX = (float) (offsetX + u) / (float) renderer.getTextureManager().getAtlasWidth();
         float startY = (float) (offsetY + v) / (float) renderer.getTextureManager().getAtlasHeight();
         float endX = startX + (float) maxU / (float) renderer.getTextureManager().getAtlasWidth();
         float endY = startY + (float) maxV / (float) renderer.getTextureManager().getAtlasHeight();
         x *= scale;
         y *= scale;
-        renderer.vertex(x, y, startX, startY).vertex(x + width * scale, y, endX, startY).vertex(x + width * scale, y + height * scale, endX, endY);
-        renderer.vertex(x + width * scale, y + height * scale, endX, endY).vertex(x, y + height * scale, startX, endY).vertex(x, y, startX, startY);
+        renderer.vertex(x, y, startX, startY, red, green, blue).vertex(x + width * scale, y, endX, startY, red, green, blue).vertex(x + width * scale, y + height * scale, endX, endY, red, green, blue);
+        renderer.vertex(x + width * scale, y + height * scale, endX, endY, red, green, blue).vertex(x, y + height * scale, startX, endY, red, green, blue).vertex(x, y, startX, startY, red, green, blue);
     }
 }

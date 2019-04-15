@@ -51,6 +51,7 @@ public class ShaderProgram {
 
         attribute("position", 2);
         attribute("uv", 2);
+        attribute("color", 3);
         uniform("model", new Matrix4f());
         uniform("view", new Matrix4f());
         updateProjection(width, height);
@@ -126,6 +127,6 @@ public class ShaderProgram {
     }
 
     public int getVertexSize() {
-        return 4;
+        return 7;
     }
 }
