@@ -2,6 +2,7 @@ package com.raphydaphy.rebound.render;
 
 import com.raphydaphy.rebound.Rebound;
 import com.raphydaphy.rebound.engine.Window;
+import com.raphydaphy.rebound.engine.asset.Font;
 import com.raphydaphy.rebound.engine.render.Camera;
 import com.raphydaphy.rebound.engine.render.Renderer;
 import com.raphydaphy.rebound.engine.shader.ShaderProgram;
@@ -15,6 +16,7 @@ public class GameRenderer {
     private Renderer renderer;
     private ShaderProgram worldShader;
     private ShaderProgram uiShader;
+    private Font font;
 
     public GameRenderer(Rebound rebound) {
         this.rebound = rebound;
@@ -23,6 +25,7 @@ public class GameRenderer {
         this.renderer.getTextureManager().bind();
         this.worldShader = new ShaderProgram(new ResourceName("shaders/world")).init(window.getWidth(), window.getHeight());
         this.uiShader = new ShaderProgram(new ResourceName("shaders/world")).init(window.getWidth(), window.getHeight());
+        this.font = new Font(new ResourceName("fonts/alagard"));
     }
 
     public void onResize(int width, int height) {
@@ -57,6 +60,8 @@ public class GameRenderer {
         this.renderer.begin();
 
         if (rebound.getState() == GameState.MENU) {
+            font.draw(this.renderer, "Rebound", 40, 20, 0, 2);
+            font.draw(this.renderer, "a super epic game", 42, 70, 0x46494f);
             this.renderer.getTextureManager().get(play).draw(this.renderer, window.getWidth() / 4 - 64, window.getHeight() / 4 - 16, 2);
         } else {
             this.renderer.getTextureManager().get(slot).draw(this.renderer, window.getWidth() / 4 - 16, window.getHeight() / 2 - 36, 2);
