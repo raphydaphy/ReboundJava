@@ -1,9 +1,7 @@
 package com.raphydaphy.rebound.engine.shader;
 
-import com.raphydaphy.rebound.util.ResourceLocation;
+import com.raphydaphy.rebound.util.ResourceName;
 import org.joml.Matrix4f;
-import org.joml.Vector2f;
-import org.joml.Vector3f;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryStack;
 
@@ -23,9 +21,9 @@ public class ShaderProgram {
     private Map<String, Integer> uniforms = new HashMap<>();
     private Map<String, Integer> attributes = new HashMap<>();
 
-    public ShaderProgram(ResourceLocation source) {
-        vertexShader = compileShader(new ResourceLocation(source.getNamespace(), source.getResource() + ".vert"), GL30.GL_VERTEX_SHADER);
-        fragmentShader = compileShader(new ResourceLocation(source.getNamespace(), source.getResource() + ".frag"), GL30.GL_FRAGMENT_SHADER);
+    public ShaderProgram(ResourceName source) {
+        vertexShader = compileShader(new ResourceName(source.getNamespace(), source.getResourceName() + ".vert"), GL30.GL_VERTEX_SHADER);
+        fragmentShader = compileShader(new ResourceName(source.getNamespace(), source.getResourceName() + ".frag"), GL30.GL_FRAGMENT_SHADER);
         program = GL30.glCreateProgram();
 
         GL30.glAttachShader(program, vertexShader);
@@ -48,7 +46,7 @@ public class ShaderProgram {
         GL30.glDeleteShader(fragmentShader);
     }
 
-    public void init(int width, int height) {
+    public ShaderProgram init(int width, int height) {
         bind();
 
         attribute("position", 2);
@@ -56,6 +54,7 @@ public class ShaderProgram {
         uniform("model", new Matrix4f());
         uniform("view", new Matrix4f());
         updateProjection(width, height);
+        return this;
     }
 
     public void updateProjection(int width, int height) {
@@ -94,7 +93,7 @@ public class ShaderProgram {
         GL30.glUseProgram(0);
     }
 
-    private int compileShader(ResourceLocation location, int type) {
+    private int compileShader(ResourceName location, int type) {
         var source = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(location.getInputStream(), StandardCharsets.UTF_8))) {
             String line;

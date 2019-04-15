@@ -75,6 +75,10 @@ public class Window {
         GLFW.glfwSwapBuffers(id);
     }
 
+    public boolean isKeyDown(int key) {
+        return GLFW.glfwGetKey(id, key) == GLFW.GLFW_PRESS;
+    }
+
     public void close() {
         GLFW.glfwSetWindowShouldClose(id, true);
     }

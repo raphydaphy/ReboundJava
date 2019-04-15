@@ -1,6 +1,6 @@
-package com.raphydaphy.rebound.engine.render;
+package com.raphydaphy.rebound.engine.asset;
 
-import com.raphydaphy.rebound.util.ResourceLocation;
+import com.raphydaphy.rebound.util.ResourceName;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL30;
 
@@ -10,19 +10,17 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.*;
 import java.util.*;
-import java.util.stream.Stream;
 
 public class TextureStitcher {
-    private List<ResourceLocation> toStitch = new ArrayList<>();
+    private List<ResourceName> toStitch = new ArrayList<>();
     private int atlasID = 0;
     private int atlasWidth = 0;
     private int atlasHeight = 0;
 
-    public Map<ResourceLocation, Sprite> stitch(boolean save) {
+    public Map<ResourceName, Sprite> stitch(boolean save) {
         List<StitchPos> stitchPositions = new ArrayList<>();
 
         int widest = 0;
@@ -31,7 +29,7 @@ public class TextureStitcher {
         int endY = 0;
 
         // Calculate Positions
-        for (ResourceLocation name : this.toStitch) {
+        for (ResourceName name : this.toStitch) {
             try {
                 InputStream stream = name.getInputStream();
                 BufferedImage tex = ImageIO.read(stream);
@@ -73,7 +71,7 @@ public class TextureStitcher {
 
         // Create Atlas
         BufferedImage buffer = new BufferedImage(endX + 2, endY + 2, BufferedImage.TYPE_4BYTE_ABGR);
-        Map<ResourceLocation, Sprite> atlas = new HashMap<>();
+        Map<ResourceName, Sprite> atlas = new HashMap<>();
         for (StitchPos pos : stitchPositions) {
             try {
                 int width = pos.tex.getWidth();
@@ -149,12 +147,12 @@ public class TextureStitcher {
         return -1;
     }
 
-    public void load(ResourceLocation name) {
+    public void load(ResourceName name) {
         toStitch.add(name);
     }
 
-    public void loadAll(ResourceLocation dir) {
-        String dirString = "assets/" + dir.getNamespace() + "/" + dir.getResource();
+    public void loadAll(ResourceName dir) {
+        String dirString = "assets/" + dir.getNamespace() + "/" + dir.getResourceName();
         try {
             URL url = ClassLoader.getSystemClassLoader().getResource(dirString);
             if (url == null) {
@@ -174,7 +172,7 @@ public class TextureStitcher {
         }
     }
 
-    private void loadAll(ResourceLocation dir, Path path) throws IOException {
+    private void loadAll(ResourceName dir, Path path) throws IOException {
         Files.walk(path, 1).forEach((fPath) -> {
             if (Files.isDirectory(fPath)) {
                 if (!fPath.equals(path)) {
@@ -187,7 +185,7 @@ public class TextureStitcher {
             } else {
                 String name = fPath.getName(path.getNameCount()).toString();
                 if (name.endsWith("png")) {
-                    ResourceLocation loc = dir.append("/" + name);
+                    ResourceName loc = dir.append("/" + name);
                     load(loc);
                 }
             }
@@ -196,11 +194,11 @@ public class TextureStitcher {
 
     private static class StitchPos {
         final BufferedImage tex;
-        final ResourceLocation name;
+        final ResourceName name;
         final int x;
         final int y;
 
-        StitchPos(BufferedImage tex, ResourceLocation name, int x, int y) {
+        StitchPos(BufferedImage tex, ResourceName name, int x, int y) {
             this.tex = tex;
             this.name = name;
             this.x = x;

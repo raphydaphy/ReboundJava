@@ -1,13 +1,14 @@
-package com.raphydaphy.rebound.engine.render;
+package com.raphydaphy.rebound.engine.asset;
 
-import com.raphydaphy.rebound.util.ResourceLocation;
+import com.raphydaphy.rebound.engine.render.Renderer;
+import com.raphydaphy.rebound.util.ResourceName;
 
 public class Sprite {
-    private final ResourceLocation name;
+    private final ResourceName name;
     private int width, height, offsetX, offsetY;
 
 
-    public Sprite(ResourceLocation name, int width, int height, int offsetX, int offsetY) {
+    public Sprite(ResourceName name, int width, int height, int offsetX, int offsetY) {
         this.name = name;
         this.width = width;
         this.height = height;
@@ -15,7 +16,7 @@ public class Sprite {
         this.offsetY = offsetY;
     }
 
-    public ResourceLocation getName() {
+    public ResourceName getName() {
         return name;
     }
 

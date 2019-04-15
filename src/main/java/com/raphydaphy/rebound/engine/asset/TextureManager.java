@@ -1,14 +1,14 @@
-package com.raphydaphy.rebound.engine.render;
+package com.raphydaphy.rebound.engine.asset;
 
-import com.raphydaphy.rebound.util.ResourceLocation;
+import com.raphydaphy.rebound.util.ResourceName;
 import org.lwjgl.opengl.GL30;
 
 import java.util.Map;
 
 public class TextureManager {
-    public static final ResourceLocation missing = new ResourceLocation("textures/missing.png");
+    public static final ResourceName missing = new ResourceName("textures/missing.png");
 
-    private final Map<ResourceLocation, Sprite> atlas;
+    private final Map<ResourceName, Sprite> atlas;
     private int atlasID, atlasWidth, atlasHeight;
 
     public TextureManager(TextureStitcher stitcher) {
@@ -23,7 +23,7 @@ public class TextureManager {
         GL30.glBindTexture(GL30.GL_TEXTURE_2D, atlasID);
     }
 
-    public Sprite get(ResourceLocation name) {
+    public Sprite get(ResourceName name) {
         if (atlas.containsKey(name)) return atlas.get(name);
         return atlas.get(missing);
     }
