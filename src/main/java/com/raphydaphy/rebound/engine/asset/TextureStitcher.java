@@ -163,6 +163,7 @@ public class TextureStitcher {
             if (uri.getScheme().equals("jar")) {
                 FileSystem fileSystem = FileSystems.newFileSystem(uri, Collections.<String, Object>emptyMap());
                 loadAll(dir, fileSystem.getPath(dirString));
+                fileSystem.close();
             } else {
                 loadAll(dir, Paths.get(uri));
             }

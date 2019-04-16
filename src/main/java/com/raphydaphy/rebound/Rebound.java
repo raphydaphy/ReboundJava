@@ -1,21 +1,20 @@
 package com.raphydaphy.rebound;
 
+import com.raphydaphy.rebound.asset.Sounds;
 import com.raphydaphy.rebound.engine.Timer;
 import com.raphydaphy.rebound.engine.Window;
+import com.raphydaphy.rebound.engine.asset.Sound;
+import com.raphydaphy.rebound.engine.asset.SoundManager;
 import com.raphydaphy.rebound.engine.vertex.VertexArray;
 import com.raphydaphy.rebound.render.GameRenderer;
 import com.raphydaphy.rebound.state.GameState;
 import com.raphydaphy.rebound.util.Logging;
+import com.raphydaphy.rebound.util.ResourceName;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL30;
-import org.lwjgl.system.MemoryUtil;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,11 +24,12 @@ public class Rebound {
 
     private boolean initialized = false;
     private Window window;
+    private SoundManager soundManager;
     private GameRenderer renderer;
     private GameState state;
     private Timer timer;
 
-    private Rebound() {
+    private void run() {
         init();
         loop();
         cleanup();
@@ -51,6 +51,7 @@ public class Rebound {
 
         this.window = new Window(this, 1080, 720, true, true);
         this.timer = new Timer(20);
+        this.soundManager = new SoundManager();
     }
 
     public void onMouse(int button, int action, float mouseX, float mouseY) {
@@ -58,6 +59,7 @@ public class Rebound {
             float centerY = (float) window.getHeight() / 2;
             float centerX = (float) window.getWidth() / 2;
             if (action == GLFW.GLFW_RELEASE && mouseY >= centerY - 32 && mouseY <= centerY + 32 && mouseX >= centerX - 128 && mouseX <= centerX + 128) {
+                source.play(Sounds.click);
                 setState(GameState.INGAME);
             }
         }
@@ -92,14 +94,20 @@ public class Rebound {
         }
     }
 
+    private Sound.Source source;
+
     private void loop() {
         GL.createCapabilities();
 
         VertexArray vao = new VertexArray().bind();
 
         renderer = new GameRenderer(this);
-        getLogger().info("Initialized Rebound!");
+        getLogger().info("Initialized Engine!");
         initialized = true;
+
+
+        Sounds.init();
+        source = new Sound.Source();
 
         float delta;
         float accumulator = 0f;
@@ -126,6 +134,8 @@ public class Rebound {
             timer.update();
         }
 
+        source.delete();
+
         vao.delete();
         renderer.delete();
     }
@@ -150,6 +160,7 @@ public class Rebound {
     }
 
     private void cleanup() {
+        soundManager.delete();
         window.destroy();
 
         GLFW.glfwTerminate();
@@ -159,6 +170,10 @@ public class Rebound {
 
     public Window getWindow() {
         return window;
+    }
+
+    public SoundManager getSoundManager() {
+        return soundManager;
     }
 
     public int getFPS() {
@@ -179,5 +194,6 @@ public class Rebound {
 
     public static void main(String... args) {
         INSTANCE = new Rebound();
+        INSTANCE.run();
     }
 }

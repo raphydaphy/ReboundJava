@@ -16,16 +16,14 @@ import java.util.logging.Level;
 
 public class ShaderProgram {
     private final int program;
-    private final int vertexShader;
-    private final int fragmentShader;
 
     private int attribOffset = 0;
     private Map<String, Integer> uniforms = new HashMap<>();
     private Map<String, Integer> attributes = new HashMap<>();
 
     public ShaderProgram(ResourceName source) {
-        vertexShader = compileShader(new ResourceName(source.getNamespace(), source.getResourceName() + ".vert"), GL30.GL_VERTEX_SHADER);
-        fragmentShader = compileShader(new ResourceName(source.getNamespace(), source.getResourceName() + ".frag"), GL30.GL_FRAGMENT_SHADER);
+        int vertexShader = compileShader(new ResourceName(source.getNamespace(), source.getResourceName() + ".vert"), GL30.GL_VERTEX_SHADER);
+        int fragmentShader = compileShader(new ResourceName(source.getNamespace(), source.getResourceName() + ".frag"), GL30.GL_FRAGMENT_SHADER);
         program = GL30.glCreateProgram();
 
         GL30.glAttachShader(program, vertexShader);
@@ -131,5 +129,9 @@ public class ShaderProgram {
 
     public int getVertexSize() {
         return 7;
+    }
+
+    public void delete() {
+        GL30.glDeleteProgram(program);
     }
 }

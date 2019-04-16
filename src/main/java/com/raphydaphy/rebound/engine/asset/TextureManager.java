@@ -35,4 +35,8 @@ public class TextureManager {
     public int getAtlasHeight() {
         return atlasHeight;
     }
+
+    public void delete() {
+        GL30.glDeleteTextures(atlasID);
+    }
 }

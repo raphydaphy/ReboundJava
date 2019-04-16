@@ -80,6 +80,8 @@ public class GameRenderer {
     }
 
     public void delete() {
+        worldShader.delete();
+        uiShader.delete();
         renderer.delete();
     }
 }

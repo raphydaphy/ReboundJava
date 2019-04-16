@@ -16,7 +16,7 @@ public class Renderer {
 
     private Rebound rebound;
     private Camera camera;
-    private TextureManager manager;
+    private TextureManager textureManager;
     private FloatBuffer buffer;
     private ShaderProgram program;
     private VertexBuffer vbo;
@@ -35,11 +35,11 @@ public class Renderer {
         TextureStitcher stitcher = new TextureStitcher();
         stitcher.loadAll(new ResourceName("textures"));
         stitcher.loadAll(new ResourceName("fonts"));
-        this.manager = new TextureManager(stitcher);
+        this.textureManager = new TextureManager(stitcher);
     }
 
     public TextureManager getTextureManager() {
-        return manager;
+        return textureManager;
     }
 
     public int getScale() {
@@ -117,6 +117,7 @@ public class Renderer {
     }
 
     public void delete() {
+        textureManager.delete();
         vbo.delete();
     }
 }
