@@ -49,9 +49,9 @@ public class GameRenderer {
         this.renderer.begin();
 
         if (rebound.getState() == GameState.INGAME) {
-            this.renderer.getTextureManager().get(parchment).draw(this.renderer, 150, 30);
-            this.renderer.getTextureManager().get(boiler).draw(this.renderer, 20, 13, 24, 60, 0, 0, 24, 60, 4, 0.3f, 1, 1);
-            this.renderer.getTextureManager().get(island).draw(this.renderer, 80, 30);
+            this.renderer.getTextureManager().get(parchment).draw(this.renderer, 250, 150, 4);
+            this.renderer.getTextureManager().get(boiler).draw(this.renderer, 40, 26, 96, 240, 0, 0, 24, 60, 4, 0.3f, 1);
+            this.renderer.getTextureManager().get(island).draw(this.renderer, 160, 60, 4);
         }
 
         this.renderer.draw();
@@ -62,14 +62,14 @@ public class GameRenderer {
         if (rebound.getState() == GameState.MENU) {
             font.draw(this.renderer, "Rebound", 40, 20, 0, 2);
             font.draw(this.renderer, "a super epic game", 42, 70, 0x46494f);
-            font.draw(this.renderer, "Made by raphydaphy with moral support from (many people). This paragraph is intentionally long to test line wrapping! Hopefully it doesn't break anything!", window.getWidth() / 2 - 200, window.getHeight() - 300, 0x46494f, 1, 400);
-            this.renderer.getTextureManager().get(play).draw(this.renderer, window.getWidth() / 4 - 64, window.getHeight() / 4 - 16, 2);
+            font.draw(this.renderer, "Made by raphydaphy with moral support from (many people). This paragraph is intentionally long to test line wrapping! Hopefully it doesn't break anything!", window.getWidth() / 2 - 200, window.getHeight() - 200, 0x46494f, 1, 400);
+            this.renderer.getTextureManager().get(play).draw(this.renderer, window.getWidth() / 2 - 128, window.getHeight() / 2 - 32);
         } else {
             font.draw(this.renderer, rebound.getFPS() + " FPS", 10, 10, 0x46494f);
-            this.renderer.getTextureManager().get(slot).draw(this.renderer, window.getWidth() / 4 - 16, window.getHeight() / 2 - 36, 2);
-            this.renderer.getTextureManager().get(slot).draw(this.renderer, window.getWidth() / 4 - 50, window.getHeight() / 2 - 36, 2);
-            this.renderer.getTextureManager().get(slot).draw(this.renderer, window.getWidth() / 4 + 18, window.getHeight() / 2 - 36, 2);
-            this.renderer.getTextureManager().get(scepter).draw(this.renderer, (int) window.getMouseX() / renderer.getScale() - 8, (int) window.getMouseY() / renderer.getScale() - 8);
+            this.renderer.getTextureManager().get(slot).draw(this.renderer, window.getWidth() / 2 - 32, window.getHeight() - 72);
+            this.renderer.getTextureManager().get(slot).draw(this.renderer, window.getWidth() / 2 - 100, window.getHeight() - 72);
+            this.renderer.getTextureManager().get(slot).draw(this.renderer, window.getWidth() / 2 + 36, window.getHeight() - 72);
+            this.renderer.getTextureManager().get(scepter).draw(this.renderer, (int) window.getMouseX() - 8, (int) window.getMouseY() - 8);
         }
 
         this.renderer.draw();

@@ -82,16 +82,16 @@ public class Font {
             int charID = (int)text.charAt(i);
             if (!characters.containsKey(charID)) continue;
             Character character = characters.get(charID);
-            draw(renderer, sprite, character, x / size + character.xOFfset, y / size + character.yOffset, color, size);
+            draw(renderer, sprite, character, x + character.xOFfset * size, y + character.yOffset * size, character.width * size, character.height * size, color);
             x += character.xAdvance * size;
         }
     }
 
-    private void draw(Renderer renderer, Sprite sprite, Character character, int x, int y, int color, int scale) {
+    private void draw(Renderer renderer, Sprite sprite, Character character, int x, int y, int width, int height, int color) {
         float r = ((color & 0xFF0000) >> 16) / 255f;
         float g = ((color & 0xFF00) >> 8) / 255f;
         float b = (color & 0xFF) / 255f;
-        sprite.draw(renderer, x, y, character.width, character.height, character.x, character.y, character.width, character.height, scale, r, g, b);
+        sprite.draw(renderer, x, y, width, height, character.x, character.y, character.width, character.height, r, g, b);
     }
 
     public static class Character {

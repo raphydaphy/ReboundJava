@@ -20,14 +20,6 @@ public class Sprite {
         return name;
     }
 
-    public int getOffsetX() {
-        return offsetX;
-    }
-
-    public int getOffsetY() {
-        return offsetY;
-    }
-
     public int getWidth() {
         return width;
     }
@@ -41,21 +33,23 @@ public class Sprite {
     }
 
     public void draw(Renderer renderer, int x, int y, int scale) {
-        draw(renderer, x, y, getWidth(), getHeight(), 0, 0, getWidth(), getHeight(), scale);
+        draw(renderer, x, y, getWidth() * scale, getHeight() * scale);
     }
 
-    public void draw(Renderer renderer, int x, int y, int width, int height, int u, int v, int maxU, int maxV, int scale) {
-        draw(renderer, x, y, width, height, u, v, maxU, maxV, scale, 1, 1, 1);
+    public void draw(Renderer renderer, int x, int y, int width, int height) {
+        draw(renderer, x, y, width, height, 0, 0, getWidth(), getHeight());
     }
 
-    public void draw(Renderer renderer, int x, int y, int width, int height, int u, int v, int maxU, int maxV, int scale, float red, float green, float blue) {
+    public void draw(Renderer renderer, int x, int y, int width, int height, int u, int v, int maxU, int maxV) {
+        draw(renderer, x, y, width, height, u, v, maxU, maxV, 1, 1, 1);
+    }
+
+    public void draw(Renderer renderer, int x, int y, int width, int height, int u, int v, int maxU, int maxV, float red, float green, float blue) {
         float startX = (float) (offsetX + u) / (float) renderer.getTextureManager().getAtlasWidth();
         float startY = (float) (offsetY + v) / (float) renderer.getTextureManager().getAtlasHeight();
         float endX = startX + (float) maxU / (float) renderer.getTextureManager().getAtlasWidth();
         float endY = startY + (float) maxV / (float) renderer.getTextureManager().getAtlasHeight();
-        x *= scale;
-        y *= scale;
-        renderer.vertex(x, y, startX, startY, red, green, blue).vertex(x + width * scale, y, endX, startY, red, green, blue).vertex(x + width * scale, y + height * scale, endX, endY, red, green, blue);
-        renderer.vertex(x + width * scale, y + height * scale, endX, endY, red, green, blue).vertex(x, y + height * scale, startX, endY, red, green, blue).vertex(x, y, startX, startY, red, green, blue);
+        renderer.vertex(x, y, startX, startY, red, green, blue).vertex(x + width, y, endX, startY, red, green, blue).vertex(x + width, y + height, endX, endY, red, green, blue);
+        renderer.vertex(x + width, y + height, endX, endY, red, green, blue).vertex(x, y + height, startX, endY, red, green, blue).vertex(x, y, startX, startY, red, green, blue);
     }
 }

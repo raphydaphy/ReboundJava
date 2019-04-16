@@ -21,7 +21,7 @@ public class Renderer {
     private ShaderProgram program;
     private VertexBuffer vbo;
     private boolean drawing = false;
-    private int scale = 4;
+    private int scale = 2;
     private int verts = 0;
     private int components = 0;
 
