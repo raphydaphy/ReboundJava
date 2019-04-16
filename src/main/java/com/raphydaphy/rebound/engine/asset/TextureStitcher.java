@@ -1,5 +1,6 @@
 package com.raphydaphy.rebound.engine.asset;
 
+import com.raphydaphy.rebound.Rebound;
 import com.raphydaphy.rebound.util.ResourceName;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL30;
@@ -13,6 +14,7 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.file.*;
 import java.util.*;
+import java.util.logging.Level;
 
 public class TextureStitcher {
     private List<ResourceName> toStitch = new ArrayList<>();
@@ -64,8 +66,7 @@ public class TextureStitcher {
                 endX = Math.max(endX, x + tex.getWidth());
                 endY = Math.max(endY, y + tex.getHeight());
             } catch (Exception e) {
-                System.err.println("Failed to stitch texture with name " + name + "! Printing stack trace...");
-                e.printStackTrace();
+                Rebound.getLogger().log(Level.WARNING, "Failed to stitch texture with name " + name + "!", e);
             }
         }
 
@@ -83,14 +84,14 @@ public class TextureStitcher {
                 Sprite sprite = new Sprite(pos.name, width, height, pos.x, pos.y);
                 atlas.put(pos.name, sprite);
             } catch (Exception e) {
-                System.err.println("Failed to stitch " + pos.name + "! Printing stack trace...");
-                e.printStackTrace();
+                Rebound.getLogger().log(Level.WARNING, "Failed to stitch " + pos.name + "!", e);
             }
         }
 
         // Convert to the right format
         this.atlasWidth = buffer.getWidth();
         this.atlasHeight = buffer.getHeight();
+        Rebound.getLogger().info("Created texture atlas with dimensions " + atlasWidth + " x " + atlasHeight);
         var pixels = new int[this.atlasWidth * this.atlasHeight];
         buffer.getRGB(0, 0, atlasWidth, this.atlasHeight, pixels, 0, this.atlasWidth);
         var data = BufferUtils.createIntBuffer(buffer.getWidth() * buffer.getHeight());
@@ -117,8 +118,7 @@ public class TextureStitcher {
             try {
                 ImageIO.write(buffer, "png", new File("rebound/spritesheet.png"));
             } catch (IOException e) {
-                System.err.println("Failed to save sprite sheet! Printing stack trace...");
-                e.printStackTrace();
+                Rebound.getLogger().log(Level.WARNING, "Failed to save sprite sheet!", e);
             }
         }
 
@@ -156,7 +156,7 @@ public class TextureStitcher {
         try {
             URL url = ClassLoader.getSystemClassLoader().getResource(dirString);
             if (url == null) {
-                System.err.println("Failed to access directory for texture stitching with name " + dir + "!");
+                Rebound.getLogger().warning("Failed to access directory for texture stitching with name " + dir + "!");
                 return;
             }
             URI uri = url.toURI();
@@ -167,8 +167,7 @@ public class TextureStitcher {
                 loadAll(dir, Paths.get(uri));
             }
         } catch (Exception e) {
-            System.err.println("Failed to load textures from directory " + dir + "! Printing stack trace...");
-            e.printStackTrace();
+            Rebound.getLogger().log(Level.WARNING, "Failed to load textures from directory " + dir + "!", e);
         }
     }
 
@@ -179,7 +178,7 @@ public class TextureStitcher {
                     try {
                         loadAll(dir.append("/" + fPath.getName(path.getNameCount()).toString()), fPath);
                     } catch (IOException e) {
-                        System.err.println("Failed to load nested textures from " + fPath + "! Printing stack trace...");
+                        Rebound.getLogger().log(Level.WARNING, "Failed to load nested textures from " + fPath + "!", e);
                     }
                 }
             } else {

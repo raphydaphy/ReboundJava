@@ -11,7 +11,7 @@ public class ResourceName implements Comparable<ResourceName> {
     public ResourceName(String combined)
     {
         String[] split = combined.split(":");
-        if (split.length > 2) System.err.println("Trying to create a ResourceName from the invalid identifier " + combined);
+        if (split.length > 2) Rebound.getLogger().warning("Trying to create a ResourceName from the invalid identifier " + combined);
 
         if (split.length == 1) {
             this.namespace = Rebound.NAMESPACE;

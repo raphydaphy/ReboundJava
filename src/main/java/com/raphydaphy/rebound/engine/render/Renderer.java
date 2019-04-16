@@ -52,7 +52,7 @@ public class Renderer {
 
     public void useProgram(ShaderProgram program) {
         if (drawing) {
-            System.err.println("Tried to change shader program mid-render!");
+            Rebound.getLogger().warning("Tried to change shader program mid-render!");
             return;
         }
         this.program = program;
@@ -64,7 +64,7 @@ public class Renderer {
 
     public Renderer with(float value) {
         if (!drawing) {
-            System.err.println("Tried to add vertex data when not drawing!");
+            Rebound.getLogger().warning("Tried to add vertex data when not drawing!");
             return this;
         }
         buffer.put(value);
@@ -79,7 +79,7 @@ public class Renderer {
 
     public void begin() {
         if (drawing) {
-            System.err.println("Tried to restart rendering mid-render!");
+            Rebound.getLogger().warning("Tried to restart rendering mid-render!");
             return;
         }
         drawing = true;
@@ -90,7 +90,7 @@ public class Renderer {
 
     public void draw() {
         if (!drawing) {
-            System.err.println("Tried to stop rendering which hadn't started!");
+            Rebound.getLogger().warning("Tried to stop rendering which hadn't started!");
             return;
         }
         drawing = false;

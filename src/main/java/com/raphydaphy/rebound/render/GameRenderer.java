@@ -49,7 +49,7 @@ public class GameRenderer {
         this.renderer.begin();
 
         if (rebound.getState() == GameState.INGAME) {
-            this.renderer.getTextureManager().get(parchment).draw(this.renderer, 0, 0);
+            this.renderer.getTextureManager().get(parchment).draw(this.renderer, 150, 30);
             this.renderer.getTextureManager().get(boiler).draw(this.renderer, 20, 13, 24, 60, 0, 0, 24, 60, 4, 0.3f, 1, 1);
             this.renderer.getTextureManager().get(island).draw(this.renderer, 80, 30);
         }
@@ -65,6 +65,7 @@ public class GameRenderer {
             font.draw(this.renderer, "Made by raphydaphy with moral support from (many people). This paragraph is intentionally long to test line wrapping! Hopefully it doesn't break anything!", window.getWidth() / 2 - 200, window.getHeight() - 300, 0x46494f, 1, 400);
             this.renderer.getTextureManager().get(play).draw(this.renderer, window.getWidth() / 4 - 64, window.getHeight() / 4 - 16, 2);
         } else {
+            font.draw(this.renderer, rebound.getFPS() + " FPS", 10, 10, 0x46494f);
             this.renderer.getTextureManager().get(slot).draw(this.renderer, window.getWidth() / 4 - 16, window.getHeight() / 2 - 36, 2);
             this.renderer.getTextureManager().get(slot).draw(this.renderer, window.getWidth() / 4 - 50, window.getHeight() / 2 - 36, 2);
             this.renderer.getTextureManager().get(slot).draw(this.renderer, window.getWidth() / 4 + 18, window.getHeight() / 2 - 36, 2);

@@ -3,6 +3,7 @@ package com.raphydaphy.rebound.engine.asset;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.raphydaphy.rebound.Rebound;
 import com.raphydaphy.rebound.engine.render.Renderer;
 import com.raphydaphy.rebound.util.ResourceName;
 
@@ -13,6 +14,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 
 public class Font {
     Map<Integer, Character> characters = new HashMap<>();
@@ -32,8 +34,7 @@ public class Font {
             }
             stream.close();
         } catch (IOException e) {
-            System.err.println("Failed to read font from " + name + "! Printing stack trace...");
-            e.printStackTrace();
+            Rebound.getLogger().log(Level.WARNING, "Failed to read font from " + name + "!", e);
         }
 
         JsonObject json = new JsonParser().parse(source.toString()).getAsJsonObject();
@@ -43,6 +44,8 @@ public class Font {
             JsonObject innerChar = charObject.getValue().getAsJsonObject();
             characters.put(Integer.parseInt(charObject.getKey()), new Character(innerChar.get("x").getAsInt(), innerChar.get("y").getAsInt(), innerChar.get("width").getAsInt(), innerChar.get("height").getAsInt(), innerChar.get("xOffset").getAsInt(), innerChar.get("yOffset").getAsInt(), innerChar.get("xAdvance").getAsInt()));
         }
+
+        Rebound.getLogger().info("Initialized font " + name + " with " + characters.size() + " characters");
     }
 
     public void draw(Renderer renderer, String text, int x, int y, int color) {

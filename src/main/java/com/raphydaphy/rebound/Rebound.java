@@ -5,15 +5,19 @@ import com.raphydaphy.rebound.engine.Window;
 import com.raphydaphy.rebound.engine.vertex.VertexArray;
 import com.raphydaphy.rebound.render.GameRenderer;
 import com.raphydaphy.rebound.state.GameState;
+import com.raphydaphy.rebound.util.Logging;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL30;
+import org.lwjgl.system.MemoryUtil;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Rebound {
     public static String NAMESPACE = "rebound";
@@ -32,7 +36,10 @@ public class Rebound {
     }
 
     private void init() {
-        GLFWErrorCallback.createPrint(System.err).set();
+        Logging.setLevel(Level.INFO);
+        GLFW.glfwSetErrorCallback(GLFWErrorCallback.create((error, description) -> {
+            Logging.glfw.log(Level.WARNING, GLFWErrorCallback.getDescription(description), new RuntimeException());
+        }));
         if (!GLFW.glfwInit()) throw new IllegalStateException("Failed to initialize GLFW");
 
         GLFW.glfwDefaultWindowHints();
@@ -42,7 +49,7 @@ public class Rebound {
         GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MAJOR, 3);
         GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, 3);
 
-        this.window = new Window(this, 720, 720, true, true);
+        this.window = new Window(this, 1080, 720, true, true);
         this.timer = new Timer(20);
     }
 
@@ -91,6 +98,7 @@ public class Rebound {
         VertexArray vao = new VertexArray().bind();
 
         renderer = new GameRenderer(this);
+        getLogger().info("Initialized Rebound!");
         initialized = true;
 
         float delta;
@@ -153,20 +161,23 @@ public class Rebound {
         return window;
     }
 
+    public int getFPS() {
+        return timer.getFPS();
+    }
+
+    public int getTPS() {
+        return timer.getTPS();
+    }
+
     public static Rebound getInstance() {
         return INSTANCE;
     }
 
+    public static Logger getLogger() {
+        return Logging.main;
+    }
+
     public static void main(String... args) {
-        Path runDir = Paths.get("rebound");
-        if (!Files.exists(runDir)) {
-            try {
-                Files.createDirectories(runDir);
-            } catch (IOException e) {
-                System.err.println("Failed to create run directory! Please move the game to an unprotected folder.");
-                return;
-            }
-        }
         INSTANCE = new Rebound();
     }
 }

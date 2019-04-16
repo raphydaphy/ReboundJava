@@ -1,5 +1,6 @@
 package com.raphydaphy.rebound.engine.shader;
 
+import com.raphydaphy.rebound.Rebound;
 import com.raphydaphy.rebound.util.ResourceName;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL30;
@@ -11,6 +12,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 
 public class ShaderProgram {
     private final int program;
@@ -36,7 +38,7 @@ public class ShaderProgram {
             if (success.get(0) == GL30.GL_FALSE) {
                 var logLength = stack.mallocInt(1);
                 GL30.glGetProgramiv(program, GL30.GL_INFO_LOG_LENGTH, logLength);
-                System.err.println("Failed to link shader program with source " + source + "! Printing info log... \n" + GL30.glGetProgramInfoLog(program));
+                Rebound.getLogger().log(Level.WARNING, "FFailed to link shader program with source " + source + "! Printing info log...\n" + GL30.glGetProgramInfoLog(program));
             }
         }
 
@@ -44,6 +46,8 @@ public class ShaderProgram {
         GL30.glDetachShader(program, fragmentShader);
         GL30.glDeleteShader(vertexShader);
         GL30.glDeleteShader(fragmentShader);
+
+        Rebound.getLogger().info("Initialized shader " + source + "!");
     }
 
     public ShaderProgram init(int width, int height) {
@@ -103,8 +107,7 @@ public class ShaderProgram {
                 source.append("\n");
             }
         } catch (IOException e) {
-            System.err.println("Failed to read shader from location " + location + "! Printing stack trace...");
-            e.printStackTrace();
+            Rebound.getLogger().log(Level.WARNING, "Failed to read shader from " + location + "!", e);
             return -1;
         }
 
@@ -118,7 +121,7 @@ public class ShaderProgram {
             if (success.get(0) == GL30.GL_FALSE) {
                 var logLength = stack.mallocInt(1);
                 GL30.glGetShaderiv(id, GL30.GL_INFO_LOG_LENGTH, logLength);
-                System.err.println("Failed to compile shader from location " + location + "! Printing info log... \n" + GL30.glGetShaderInfoLog(id));
+                Rebound.getLogger().warning("Failed to compile shader " + location + "! Printing info log...\n" + GL30.glGetShaderInfoLog(id));
                 GL30.glDeleteShader(id);
                 return -1;
             }
