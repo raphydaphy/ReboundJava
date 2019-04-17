@@ -6,6 +6,8 @@ import com.raphydaphy.rebound.engine.Window;
 import com.raphydaphy.rebound.engine.asset.Sound;
 import com.raphydaphy.rebound.engine.asset.SoundManager;
 import com.raphydaphy.rebound.engine.vertex.VertexArray;
+import com.raphydaphy.rebound.entity.BoundBox;
+import com.raphydaphy.rebound.entity.Entity;
 import com.raphydaphy.rebound.render.GameRenderer;
 import com.raphydaphy.rebound.state.GameState;
 import com.raphydaphy.rebound.util.Logging;
@@ -28,6 +30,8 @@ public class Rebound {
     private GameRenderer renderer;
     private GameState state;
     private Timer timer;
+    private Entity player = new Entity(160, 0, 32, 64);
+    private BoundBox ground = new BoundBox(160, 300, 128, 64);
 
     private void run() {
         init();
@@ -144,18 +148,26 @@ public class Rebound {
     private void update() {
         if (state == GameState.INGAME) {
             float cameraSpeed = 3;
+            float playerSpeed = 5;
+            player.update(ground);
             renderer.getCamera().update();
-            if (window.isKeyDown(GLFW.GLFW_KEY_W)) {
-                renderer.getCamera().moveBy(0, -cameraSpeed);
-            }
-            if (window.isKeyDown(GLFW.GLFW_KEY_S)) {
+            if (window.isKeyDown(GLFW.GLFW_KEY_UP)) {
                 renderer.getCamera().moveBy(0, cameraSpeed);
             }
-            if (window.isKeyDown(GLFW.GLFW_KEY_A)) {
+            if (window.isKeyDown(GLFW.GLFW_KEY_DOWN)) {
+                renderer.getCamera().moveBy(0, -cameraSpeed);
+            }
+            if (window.isKeyDown(GLFW.GLFW_KEY_LEFT)) {
+                renderer.getCamera().moveBy(cameraSpeed, 0);
+            }
+            if (window.isKeyDown(GLFW.GLFW_KEY_RIGHT)) {
                 renderer.getCamera().moveBy(-cameraSpeed, 0);
             }
+            if (window.isKeyDown(GLFW.GLFW_KEY_A)) {
+                player.addVelocity(-playerSpeed, 0);
+            }
             if (window.isKeyDown(GLFW.GLFW_KEY_D)) {
-                renderer.getCamera().moveBy(cameraSpeed, 0);
+                player.addVelocity(playerSpeed, 0);
             }
         }
     }
@@ -187,6 +199,10 @@ public class Rebound {
 
     public long getTotalTicks() {
         return timer.getTotalTicks();
+    }
+
+    public Entity getPlayer() {
+        return player;
     }
 
     public static Rebound getInstance() {

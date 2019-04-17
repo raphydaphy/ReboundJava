@@ -36,23 +36,23 @@ public class Sprite {
         return offsetY;
     }
 
-    public void draw(Renderer renderer, int x, int y) {
+    public void draw(Renderer renderer, float x, float y) {
         draw(renderer, x, y, renderer.getScale());
     }
 
-    public void draw(Renderer renderer, int x, int y, int scale) {
+    public void draw(Renderer renderer, float x, float y, int scale) {
         draw(renderer, x, y, getWidth() * scale, getHeight() * scale);
     }
 
-    public void draw(Renderer renderer, int x, int y, int width, int height) {
+    public void draw(Renderer renderer, float x, float y, int width, int height) {
         draw(renderer, x, y, width, height, 0, 0, getWidth(), getHeight());
     }
 
-    public void draw(Renderer renderer, int x, int y, int width, int height, int u, int v, int maxU, int maxV) {
+    public void draw(Renderer renderer, float x, float y, int width, int height, int u, int v, int maxU, int maxV) {
         draw(renderer, x, y, width, height, u, v, maxU, maxV, 1, 1, 1);
     }
 
-    public void draw(Renderer renderer, int x, int y, int width, int height, int u, int v, int maxU, int maxV, float red, float green, float blue) {
+    public void draw(Renderer renderer, float x, float y, int width, int height, int u, int v, int maxU, int maxV, float red, float green, float blue) {
         float startX = (float) (offsetX + u) / (float) renderer.getTextureManager().getAtlasWidth();
         float startY = (float) (offsetY + v) / (float) renderer.getTextureManager().getAtlasHeight();
         float endX = startX + (float) maxU / (float) renderer.getTextureManager().getAtlasWidth();

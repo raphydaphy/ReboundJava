@@ -8,6 +8,7 @@ import com.raphydaphy.rebound.engine.render.Renderer;
 import com.raphydaphy.rebound.engine.shader.ShaderProgram;
 import com.raphydaphy.rebound.state.GameState;
 import com.raphydaphy.rebound.util.ResourceName;
+import com.raphydaphy.rebound.util.Utils;
 import org.lwjgl.opengl.GL30;
 
 public class GameRenderer {
@@ -52,8 +53,14 @@ public class GameRenderer {
         if (rebound.getState() == GameState.INGAME) {
             this.renderer.getTextureManager().getSprite(parchment).draw(this.renderer, 250, 150, 4);
             this.renderer.getTextureManager().getSprite(boiler).draw(this.renderer, 40, 26, 96, 240, 0, 0, 24, 60, 4, 0.3f, 1);
-            this.renderer.getTextureManager().getSprite(island).draw(this.renderer, 160, 60, 4);
-            this.renderer.getTextureManager().getAnimation(character, 4, 0.25f).draw(this.renderer, 300, 200, 2);
+            this.renderer.getTextureManager().getSprite(island).draw(this.renderer, 160, 300, 4);
+            float playerX = Utils.lerp(rebound.getPlayer().getPrevX(), rebound.getPlayer().getX(), deltaTime);
+            float playerY = Utils.lerp(rebound.getPlayer().getPrevY(), rebound.getPlayer().getY(), deltaTime);
+            if (rebound.getPlayer().getVelocityX() != 0) {
+                this.renderer.getTextureManager().getAnimation(character, 4, 0.25f).draw(this.renderer, playerX, playerY, 2);
+            } else {
+                this.renderer.getTextureManager().getAnimation(character, 4, 0.25f).drawFrame(this.renderer, playerX, playerY, 2, true, 0);
+            }
         }
 
         this.renderer.draw();
