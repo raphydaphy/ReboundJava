@@ -50,6 +50,7 @@ public class Rebound {
         GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, 3);
 
         this.window = new Window(this, 1080, 720, true, true);
+        this.window.setIcon(new ResourceName("textures/parchment.png"));
         this.timer = new Timer(20);
         this.soundManager = new SoundManager();
     }
@@ -145,16 +146,16 @@ public class Rebound {
             float cameraSpeed = 3;
             renderer.getCamera().update();
             if (window.isKeyDown(GLFW.GLFW_KEY_W)) {
-                renderer.getCamera().moveBy(0, cameraSpeed);
-            }
-            if (window.isKeyDown(GLFW.GLFW_KEY_S)) {
                 renderer.getCamera().moveBy(0, -cameraSpeed);
             }
+            if (window.isKeyDown(GLFW.GLFW_KEY_S)) {
+                renderer.getCamera().moveBy(0, cameraSpeed);
+            }
             if (window.isKeyDown(GLFW.GLFW_KEY_A)) {
-                renderer.getCamera().moveBy(cameraSpeed, 0);
+                renderer.getCamera().moveBy(-cameraSpeed, 0);
             }
             if (window.isKeyDown(GLFW.GLFW_KEY_D)) {
-                renderer.getCamera().moveBy(-cameraSpeed, 0);
+                renderer.getCamera().moveBy(cameraSpeed, 0);
             }
         }
     }

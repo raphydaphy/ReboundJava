@@ -3,6 +3,7 @@ package com.raphydaphy.rebound.util;
 import com.raphydaphy.rebound.Rebound;
 
 import java.io.InputStream;
+import java.net.URL;
 
 public class ResourceName implements Comparable<ResourceName> {
     private final String namespace;
@@ -39,8 +40,21 @@ public class ResourceName implements Comparable<ResourceName> {
         return resourceName;
     }
 
+    public String getRelativePath() {
+        return "assets/" + namespace + "/" + resourceName;
+    }
+
     public InputStream getInputStream() {
-        return ClassLoader.getSystemClassLoader().getResourceAsStream("assets/" + namespace + "/" + resourceName);
+        return ClassLoader.getSystemClassLoader().getResourceAsStream(getRelativePath());
+    }
+
+    public String getExactPath() {
+        URL url = ClassLoader.getSystemClassLoader().getResource(getRelativePath());
+        if (url != null) {
+            return url.getPath();
+        }
+        Rebound.getLogger().warning("Tried to resolve invalid ResourceName " + toString() + "!");
+        return "";
     }
 
     @Override

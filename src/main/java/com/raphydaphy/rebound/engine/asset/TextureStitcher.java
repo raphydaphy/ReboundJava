@@ -80,6 +80,7 @@ public class TextureStitcher {
 
                 int[] pixels = new int[width * height];
                 pos.tex.getRGB(0, 0, width, height, pixels, 0, width);
+                pos.tex.flush();
                 buffer.setRGB(pos.x, pos.y, width, height, pixels, 0, width);
                 Sprite sprite = new Sprite(pos.name, width, height, pos.x, pos.y);
                 atlas.put(pos.name, sprite);
