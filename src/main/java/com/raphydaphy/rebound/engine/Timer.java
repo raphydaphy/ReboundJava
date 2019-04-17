@@ -14,6 +14,8 @@ public class Timer {
     private int tps;
     private int tpsCount;
 
+    private long totalTicks;
+
     public Timer(int targetTPS) {
         this.targetTPS = targetTPS;
         lastLoopTime = GLFW.glfwGetTime();
@@ -31,6 +33,10 @@ public class Timer {
         return GLFW.glfwGetTime();
     }
 
+    public long getTotalTicks() {
+        return totalTicks;
+    }
+
     public int getTargetTPS() {
         return targetTPS;
     }
@@ -41,6 +47,7 @@ public class Timer {
 
     public void updateTPS() {
         tpsCount++;
+        totalTicks++;
     }
 
     public void update() {

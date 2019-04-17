@@ -77,7 +77,7 @@ public class Font {
         draw(renderer, line.toString(), x, y, color, size);
     }
     public void draw(Renderer renderer, String text, int x, int y, int color, int size) {
-        Sprite sprite = renderer.getTextureManager().get(atlas);
+        Sprite sprite = renderer.getTextureManager().getSprite(atlas);
         for (int i = 0; i < text.length(); i++) {
             int charID = (int)text.charAt(i);
             if (!characters.containsKey(charID)) continue;

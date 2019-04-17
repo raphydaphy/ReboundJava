@@ -28,6 +28,14 @@ public class Sprite {
         return height;
     }
 
+    public int getOffsetX() {
+        return offsetX;
+    }
+
+    public int getOffsetY() {
+        return offsetY;
+    }
+
     public void draw(Renderer renderer, int x, int y) {
         draw(renderer, x, y, renderer.getScale());
     }

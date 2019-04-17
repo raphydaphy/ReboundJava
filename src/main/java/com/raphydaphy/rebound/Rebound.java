@@ -185,6 +185,10 @@ public class Rebound {
         return timer.getTPS();
     }
 
+    public long getTotalTicks() {
+        return timer.getTotalTicks();
+    }
+
     public static Rebound getInstance() {
         return INSTANCE;
     }
